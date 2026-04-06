@@ -10,11 +10,18 @@
   theme: palette.cyan,
 )
 
+#import "@preview/zebraw:0.6.1": *
+#show: zebraw.with(copy-button: true, lang: true)
+
+// -------------------------------------------------------
+//                     Start here
+// -------------------------------------------------------
+
 #problem(title: "1.(a)")[
   test
 ]
 
-#solution[
+#solution()[
   這裡是解答。
 ]
 
@@ -22,4 +29,12 @@
   補充說明。
 ]
 
-我覺得這樣的格式非常適合寫作業，既清晰又美觀！
+
+#lorem(51)
+
+#v(1.5em)
+```rust
+pub fn main() {
+    println!("Hello, world!");
+}
+```

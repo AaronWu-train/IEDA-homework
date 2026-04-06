@@ -67,6 +67,22 @@
     [
       #text(style: "italic", weight: "bold")[Solution:]
       #parbreak()
+      #v(3pt)
+      #body
+    ],
+  )
+  #v(0.5cm)
+]
+
+#let answer(body) = [
+  #block(
+    width: 100%,
+    breakable: true,
+    inset: (top: 0.5em, bottom: 0.5em),
+    [
+      #text(style: "italic", weight: "bold")[Ans:]
+      #parbreak()
+      #v(3pt)
       #body
     ],
   )
@@ -139,7 +155,8 @@
   )
 
   show math.equation: set text(weight: 400)
-  show raw: set text(font: "New Computer Modern Mono")
+  // show raw: set text(font: "New Computer Modern Mono", size: 11pt)
+
 
   set par(
     leading: 0.65em,
