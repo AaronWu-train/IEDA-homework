@@ -11,7 +11,7 @@
 )
 
 #import "@preview/zebraw:0.6.1": *
-#show: zebraw.with(copy-button: true, lang: true)
+#show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
 
 // -------------------------------------------------------
 //                     Start here
