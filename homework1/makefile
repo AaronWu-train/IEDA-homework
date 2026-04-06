@@ -1,5 +1,6 @@
-HWID=5
-TEXFILE = hw$(HWID).tex
+HWID=1
+TYPST_FILE = hw$(HWID).typ
+TEMPLATE_FILE = ../template.typ
 PDF = hw$(HWID).pdf
 DIST_DIR = dist
 
@@ -9,21 +10,21 @@ NAME ?= unknown
 
 all: $(PDF)
 
-$(PDF): $(TEXFILE)
+$(PDF): $(TYPST_FILE) $(TEMPLATE_FILE)
 	rm -f $(PDF)
-	xelatex -shell-escape $(TEXFILE)
-	xelatex -shell-escape $(TEXFILE)
+	typst compile $(TYPST_FILE)
+
+watch:
+	typst watch $(TYPST_FILE)
 
 archive: 
 	mkdir -p $(DIST_DIR)
 	cp $(PDF) $(DIST_DIR)/$(STUDENT_ID)_$(NAME)_HW$(HWID).pdf
 
 clean:
-	rm -f ./*.aux ./*.log ./*.bbl ./*.blg ./*.toc ./*.out ./*.lof ./*.lot ./*fls ./*.fdb_latexmk ./*.synctex.gz
-	rm -rf _minted
+	rm -f $(PDF)
 
 distclean: clean
-	rm -f $(PDF)
 	rm -rf $(DIST_DIR)
 
-.PHONY: all clean
+.PHONY: all clean distclean watch archive
