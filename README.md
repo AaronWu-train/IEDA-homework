@@ -1,1 +1,1 @@
-# Introduction to Electronic Design Automation (NTUEE, Spring 2026)
+# Introduction to Electronic Design Automation <br> (NTUEE, Spring 2026)
