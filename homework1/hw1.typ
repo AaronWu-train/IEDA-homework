@@ -27,6 +27,7 @@
 ))
 
 #import "@preview/cetz:0.3.4": canvas, draw
+#import "@preview/finite:0.5.1": automaton, layout
 
 // -------------------------------------------------------
 //                       Start here
@@ -274,7 +275,94 @@ The following is my input file for the 3-coloring problem and the result is show
 #pagebreak()
 // ---------------------- Problem 5 ----------------------
 = Model of Computation
+== // 5. (a)
+For the regular expression
+$
+  (01^*0)^*1,
+$
+we construct a DFA as follows.
+State $q_0$ is the start state.
+Reading `0` starts a loop and moves the automaton to $q_1$, where it may read any number of `1`'s.
+Reading `0` from $q_1$ completes the loop and returns to $q_0$.
+Reading `1` from $q_0$ corresponds to the final symbol of the string, so the automaton moves to the accepting state $q_2$.
 
+Since a DFA must define a transition for every input symbol at every state, we add a trap state $q_t$. Any input read after reaching $q_2$ leads to $q_t$, and $q_t$ loops on both `0` and `1`.
+
+#v(0.5em)
+#figure(
+  automaton(
+    (
+      q0: (q1: 0, q2: 1),
+      q1: (q0: 0, q1: 1),
+      q2: (qt: (0, 1)),
+      qt: (qt: (0, 1)),
+    ),
+    layout: (
+      q0: (0, 0),
+      q1: (0, -2),
+      q2: (3, 0),
+      qt: (6, 0),
+    ),
+    style: (
+      q1-q1: (anchor: bottom),
+      qt-qt: (anchor: right),
+    ),
+    initial: "q0",
+    final: ("q2",),
+  ),
+  caption: [DFA for the regular expression $(01^*0)^*1$],
+)<dfa-5a>
+
+== // 5. (b)
+#colorbox(color: olive)[
+  #figure(
+    automaton(
+      (
+        q0: (q0: 0, q1: 1),
+        q1: (q1: 1, q2: 0),
+        q2: (q0: 0, q1: 1),
+      ),
+      layout: (
+        q0: (0, 0),
+        q1: (3, 1.75),
+        q2: (3, -1.75),
+      ),
+      style: (
+        q0-q0: (anchor: top),
+        q1-q1: (anchor: top),
+        q2-q0: (curve: 0.8),
+        q0-q1: (curve: 0.8),
+      ),
+      initial: "q0",
+      final: ("q2",),
+    ),
+    caption: [The finite automaton give in the problem statement],
+  )
+]
+To derive the regular expression for the language accepted by the given automaton, we analyze the paths:
+- First time from $q_0$ to $q_2$:
+  + zero or many `0`
+  + one or many `1`
+  + one `0`
+  - The regex for this part is $0^*1^+0$.
+- Loop back from $q_2$ to $q_0$ to $q_2$:
+  + one or many `0`
+  + one or many `1`
+  + one `0`
+  - The regex for this part is $0^+1^+0$.
+- Loop back from $q_2$ to $q_1$ to $q_2$:
+  + one or many `1`
+  + one `0`
+  - The regex for this part is $1^+0$.
+
+Combining the looping back parts, we have
+$
+  (0^+1^+0) union (1^+0) = 0^*1^+0,
+$
+so the regex for the language accepted by the automaton is
+$
+  0^*1^+0 (0^*1^+0)^* = (0^*1^+0)^+
+$
 
 #pagebreak()
 // ---------------------- Problem 6 ----------------------
