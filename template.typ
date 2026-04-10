@@ -63,7 +63,7 @@
   #block(
     width: 100%,
     breakable: true,
-    inset: (top: 0.5em, bottom: 0.5em),
+    inset: (top: 0.5em, bottom: 0pt),
     [
       #text(style: "italic", weight: "bold")[Solution:]
       #parbreak()
@@ -82,7 +82,7 @@
     [
       #text(style: "italic", weight: "bold")[Ans:]
       #parbreak()
-      #v(3pt)
+      #v(-6pt)
       #body
     ],
   )
@@ -140,6 +140,7 @@
     number-align: center,
     header: context [
       #set text(size: 12pt)
+      #set par(spacing: 0.6em, leading: 0em)
       #grid(
         columns: (1fr, 1fr),
         align: (left, right),
@@ -150,17 +151,18 @@
   )
 
   set text(
-    font: ("New Computer Modern", "黑體-繁", "Noto Sans CJK TC"),
+    font: ("New Computer Modern", "Heiti TC", "Noto Sans CJK TC"),
     size: 12pt,
   )
 
+  show link: set text(fill: blue, hyphenate: true)
   show math.equation: set text(weight: 400)
   // show raw: set text(font: "New Computer Modern Mono", size: 11pt)
 
 
   set par(
     leading: 0.65em,
-    spacing: 0.6em,
+    spacing: 1em,
     justify: true,
   )
 
@@ -168,11 +170,11 @@
 
   align(center)[
     #text(size: 15pt, weight: "bold")[#class]
-    #v(1em)
+    #v(0.6em)
     #text(size: 18pt, weight: "bold")[#title]
   ]
 
-  v(2em)
+  v(1em)
 
   table(
     columns: (auto, 1fr),
@@ -184,7 +186,6 @@
     [*Department:*], [#department],
   )
 
-  v(1em)
-
+  v(0.5em)
   body
 }
