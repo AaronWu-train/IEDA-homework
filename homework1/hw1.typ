@@ -364,6 +364,35 @@ $
   0^*1^+0 (0^*1^+0)^* = (0^*1^+0)^+
 $
 
+== // 5. (c)
+
+The required timed automaton is as follows. The label RE stands for "Requesting" and AG stands for "Access Granted".
+#figure(
+  automaton(
+    (
+      Idle: (RE: "a"),
+      RE: (RE: "c", AG: "d"),
+      AG: (Idle: "e"),
+    ),
+    input-labels: (
+      a: [press `a` | | $x:=0$],
+      c: [press `a` | $x <= 2$ | $x:=0$],
+      d: [press `b` | $x >= 1$ | $x:=0$],
+      e: [$epsilon$],
+    ),
+    style: (
+      state: (radius: 0.7),
+      Idle-Idle: (anchor: top),
+    ),
+    layout: (
+      Idle: (0, 0),
+      RE: (6, 2),
+      AG: (12, 0),
+    ),
+  ),
+  caption: [Timed automaton for the timed access control system],
+)
+
 #pagebreak()
 // ---------------------- Problem 6 ----------------------
 = Scheduling
