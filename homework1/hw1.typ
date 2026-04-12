@@ -275,7 +275,7 @@ The following is my input file for the 3-coloring problem and the result is show
 #pagebreak()
 // ---------------------- Problem 5 ----------------------
 = Model of Computation
-== // 5. (a)
+== 　// 5. (a)
 For the regular expression
 $
   (01^*0)^*1,
@@ -313,7 +313,7 @@ Since a DFA must define a transition for every input symbol at every state, we a
   caption: [DFA for the regular expression $(01^*0)^*1$],
 )<dfa-5a>
 
-== // 5. (b)
+== 　// 5. (b)
 #colorbox(color: olive)[
   #figure(
     automaton(
@@ -364,7 +364,7 @@ $
   0^*1^+0 (0^*1^+0)^* = (0^*1^+0)^+
 $
 
-== // 5. (c)
+== 　// 5. (c)
 
 The required timed automaton is as follows. The label RE stands for "Requesting" and AG stands for "Access Granted".
 #figure(
@@ -392,6 +392,8 @@ The required timed automaton is as follows. The label RE stands for "Requesting"
   ),
   caption: [Timed automaton for the timed access control system],
 )
+
+== 　// 5. (d)
 
 #pagebreak()
 // ---------------------- Problem 6 ----------------------
