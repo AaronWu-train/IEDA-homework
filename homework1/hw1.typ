@@ -1,4 +1,8 @@
 #import "../template.typ": *
+#import "@preview/cetz:0.3.4": canvas, draw
+#import "@preview/finite:0.5.1": automaton, layout
+#import "@preview/zebraw:0.6.1": *
+#show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
 
 #show: project.with(
   title: "Homework 1",
@@ -9,9 +13,6 @@
   header-title: "IEDA Homework 1",
   theme: palette.gray,
 )
-
-#import "@preview/zebraw:0.6.1": *
-#show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
 
 #set heading(numbering: (
   (..args) => {
@@ -25,9 +26,6 @@
     }
   }
 ))
-
-#import "@preview/cetz:0.3.4": canvas, draw
-#import "@preview/finite:0.5.1": automaton, layout
 
 // -------------------------------------------------------
 //                       Start here
@@ -375,7 +373,7 @@ The required timed automaton is as follows. The label RE stands for "Requesting"
       AG: (Idle: "e"),
     ),
     input-labels: (
-      a: [press `a` | | $x:=0$],
+      a: [press `a` | `NULL` | $x:=0$],
       c: [press `a` | $x <= 2$ | $x:=0$],
       d: [press `b` | $x >= 1$ | $x:=0$],
       e: [$epsilon$],
