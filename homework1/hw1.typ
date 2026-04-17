@@ -2,7 +2,10 @@
 #import "@preview/cetz:0.3.4": canvas, draw
 #import "@preview/finite:0.5.1": automaton, layout
 #import "@preview/zebraw:0.6.1": *
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
+#import "@preview/wavy:0.1.3"
 #show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
+#show raw.where(lang: "wavy"): it => wavy.render(it.text)
 
 #show: project.with(
   title: "Homework 1",
@@ -273,7 +276,7 @@ The following is my input file for the 3-coloring problem and the result is show
 #pagebreak()
 // ---------------------- Problem 5 ----------------------
 = Model of Computation
-== 　// 5. (a)
+== 　 // 5. (a)
 For the regular expression
 $
   (01^*0)^*1,
@@ -311,7 +314,7 @@ Since a DFA must define a transition for every input symbol at every state, we a
   caption: [DFA for the regular expression $(01^*0)^*1$],
 )<dfa-5a>
 
-== 　// 5. (b)
+== 　 // 5. (b)
 #colorbox(color: olive)[
   #figure(
     automaton(
@@ -362,8 +365,7 @@ $
   0^*1^+0 (0^*1^+0)^* = (0^*1^+0)^+
 $
 
-== 　// 5. (c)
-
+== 　 // 5. (c)
 The required timed automaton is as follows. The label RE stands for "Requesting" and AG stands for "Access Granted".
 #figure(
   automaton(
@@ -391,9 +393,277 @@ The required timed automaton is as follows. The label RE stands for "Requesting"
   caption: [Timed automaton for the timed access control system],
 )
 
-== 　// 5. (d)
+== 　 // 5. (d)
+#figure(
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: 1cm,
+
+    // -- High Priority Producers --
+    node(
+      (0, 0),
+      align(center)[HP Idle \ #sym.circle.filled#sym.circle.filled],
+      shape: "circle",
+      name: <hp_idle>,
+      radius: 1cm,
+    ),
+    node((1, 0), [HP Req], shape: "rect", name: <t_hp_req>),
+    node((2, 0), align(center)[HP Wait], shape: "circle", name: <hp_wait>, radius: 1cm),
+    node((3, 0), [HP Produce], shape: "rect", name: <t_hp_prod>),
+
+    // -- Low Priority Producers --
+    node((0, 1.5), align(center)[LP Idle \ #sym.circle.filled], shape: "circle", name: <lp_idle>, radius: 1cm),
+    node((1, 1.5), [LP Req], shape: "rect", name: <t_lp_req>),
+    node((2, 1.5), align(center)[LP Wait], shape: "circle", name: <lp_wait>, radius: 1cm),
+    node((3, 1.5), [LP Produce], shape: "rect", name: <t_lp_prod>),
+
+    // -- Bounded Buffer (N=3) --
+    node(
+      (5, 0.75),
+      align(center)[Empty Buffer \ #sym.circle.filled#sym.circle.filled#sym.circle.filled],
+      shape: "circle",
+      name: <empty>,
+      radius: 1cm,
+    ),
+    node((5, 2.25), align(center)[Full Buffer], shape: "circle", name: <full>, radius: 1cm),
+
+    // -- Consumers --
+    node(
+      (0, 3),
+      align(center)[C Idle \ #sym.circle.filled#sym.circle.filled],
+      shape: "circle",
+      name: <c_idle>,
+      radius: 1cm,
+    ),
+    node((1, 3), [C Req], shape: "rect", name: <t_c_req>),
+    node((2, 3), align(center)[C Wait], shape: "circle", name: <c_wait>, radius: 1cm),
+    node((3, 3), [Consume], shape: "rect", name: <t_consume>),
+
+    // ==========================
+    // ARCS & ROUTING
+    // ==========================
+
+    // -- Edges: HP Lifecycle --
+    edge(<hp_idle>, <t_hp_req>, "-|>"),
+    edge(<t_hp_req>, <hp_wait>, "-|>"),
+    edge(<hp_wait>, <t_hp_prod>, "-|>"),
+    edge(<t_hp_prod>, <hp_idle>, "-|>", bend: -45deg),
+
+    // -- Edges: LP Lifecycle --
+    edge(<lp_idle>, <t_lp_req>, "-|>"),
+    edge(<t_lp_req>, <lp_wait>, "-|>"),
+    edge(<lp_wait>, <t_lp_prod>, "-|>"),
+    edge(<t_lp_prod>, <lp_idle>, "-|>", bend: 45deg),
+
+    // -- Edges: Inhibitor (Strict Priority Mechanism) --
+    // The line with a circle end (-o) disables LP Produce if HP is waiting
+    edge(<hp_wait>, <t_lp_prod>, "-o", stroke: red + 1.5pt, label-pos: 0.6, label: text(red)[Inhibitor]),
+
+    // -- Edges: Buffer Sync (Produce) --
+    edge(<empty>, <t_hp_prod>, "-|>"),
+    edge(<t_hp_prod>, <full>, "-|>"),
+    edge(<empty>, <t_lp_prod>, "-|>"),
+    edge(<t_lp_prod>, <full>, "-|>"),
+
+    // -- Edges: Consumer Lifecycle --
+    edge(<c_idle>, <t_c_req>, "-|>"),
+    edge(<t_c_req>, <c_wait>, "-|>"),
+    edge(<c_wait>, <t_consume>, "-|>"),
+    edge(<t_consume>, <c_idle>, "-|>", bend: 45deg),
+
+    // -- Edges: Buffer Sync (Consume) --
+    edge(<full>, <t_consume>, "-|>"),
+    edge(<t_consume>, <empty>, "-|>"),
+  ),
+  caption: [The Petri net of the producer-consumer system.
+    Here, `HP`, `LP`, and `C` denote the high-priority producer, low-priority producer, and consumer, respectively, while `Empty Buffer` and `Full Buffer` represent the numbers of available and occupied buffer slots. The inhibitor arc from `HP Wait` to `LP Produce` enforces the priority policy by disabling `LP Produce` whenever a high-priority request is waiting. This design ensures that HP production is always served before LP production when both contend for the shared buffer.
+  ],
+)
 
 #pagebreak()
 // ---------------------- Problem 6 ----------------------
 = Scheduling
+== Data-Flow Graph (DFG) // 6. (a)
+#let semicircle = (node, extrude, ..args) => {
+  let w = node.size.at(0) + 2 * extrude
+  let r = w
 
+  {
+    draw.arc(
+      (-r, -0.5 * r),
+      start: 180deg,
+      stop: 0deg,
+      radius: r,
+    )
+    draw.line((-r, -0.5 * r), (r, -0.5 * r))
+  }
+}
+
+#let downsemicircle = (node, extrude, ..args) => {
+  let w = node.size.at(0) + 2 * extrude
+  let r = w
+
+  {
+    draw.arc(
+      (r, 0.5 * r),
+      start: 360deg,
+      stop: 180deg,
+      radius: r,
+    )
+    draw.line((-r, 0.5 * r), (r, 0.5 * r))
+  }
+}
+
+#figure(
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: 1cm,
+    node((0, 0), align(center)[$a$], name: <a>, shape: downsemicircle),
+    node((1, 0), align(center)[$b$], name: <b>, shape: downsemicircle),
+    node((2, 0), align(center)[$c$], name: <c>, shape: downsemicircle),
+    node((3, 0), align(center)[$d$], name: <d>, shape: downsemicircle),
+    node((4, 0), align(center)[$e$], name: <e>, shape: downsemicircle),
+    node((5, 0), align(center)[$f$], name: <f>, shape: downsemicircle),
+
+    node((0.5, 1), align(center)[$+$], name: <add1>, shape: "circle"),
+    node((2.5, 1), align(center)[$+$], name: <add2>, shape: "circle"),
+    node((4.5, 1), align(center)[$times$], name: <mul1>, shape: "circle"),
+
+    node((1, 1), align(center)[$g_1$], stroke: 0pt),
+    node((3, 1), align(center)[$g_2$], stroke: 0pt),
+    node((5, 1), align(center)[$g_3$], stroke: 0pt),
+
+    node((1.5, 2), align(center)[$times$], name: <mul2>, shape: "circle"),
+    node((2, 2), align(center)[$g_4$], stroke: 0pt),
+    node((2.5, 3), align(center)[$+$], name: <add3>, shape: "circle"),
+    node((3, 3), align(center)[$g_5$], stroke: 0pt),
+
+
+    node((2.5, 4), align(center)[$z$], name: <z>, shape: semicircle),
+
+    edge(<a>, <add1>, "-|>"),
+    edge(<b>, <add1>, "-|>"),
+    edge(<add1>, <mul2>, "-|>"),
+
+    edge(<c>, <add2>, "-|>"),
+    edge(<d>, <add2>, "-|>"),
+    edge(<add2>, <mul2>, "-|>"),
+
+    edge(<e>, <mul1>, "-|>"),
+    edge(<f>, <mul1>, "-|>"),
+    edge(<mul1>, <add3>, "-|>"),
+
+    edge(<mul2>, <add3>, "-|>"),
+
+    edge(<add3>, <z>, "-|>"),
+  ),
+  caption: [The corresponding DFG of $z=(a+b) times (c+d)+(e times f)$],
+)
+
+== ASAP Scheduling // 6. (b)
+
+After ASAP scheduling, we need total 4 clock cycles to finish the computation. Addtionally, we need 2 adders and 2 multipliers to achieve this schedule.
+
+#figure(
+  wavy.render(
+    ```
+      {
+        signal:
+        [
+          {name:'clk',wave:'p...'},
+          {name:'Adder 1',wave:'2x.2',data:'g1 g5'},
+          {name:'Adder 2',wave:'2x..',data:'g2'},
+          {name:'Multiplier 1',wave:'2.x.',data:'g3'},
+          {name:'Multiplier 2',wave:'x2.x',data:'g4'},
+        ],
+        config: { hscale: 2 },
+      }
+    ```.text,
+  ),
+  caption: [ASAP scheduling result time chart],
+)
+
+== ALAP Scheduling // 6. (c)
+
+After ALAP scheduling, we need total 4 clock cycles to finish the computation. Addtionally, we need 2 adders and 2 multipliers to achieve this schedule.
+#figure(
+  wavy.render(
+    ```
+      {
+        signal:
+        [
+          {name:'clk',wave:'p...'},
+          {name:'Adder 1',wave:'2x.2',data:'g1 g5'},
+          {name:'Adder 2',wave:'2x..',data:'g2'},
+          {name:'Multiplier 1',wave:'x2.x',data:'g3'},
+          {name:'Multiplier 2',wave:'x2.x',data:'g4'},
+        ],
+        config: { hscale: 2 },
+      }
+    ```.text,
+  ),
+  caption: [ALAP scheduling result time chart],
+)
+
+#pagebreak()
+== Mobility-based Scheduling // 6. (d)
+
+- $g_1$: ASAP = 1, ALAP = 1, mobility = 0
+- $g_2$: ASAP = 1, ALAP = 1, mobility = 0
+- $g_3$: ASAP = 1, ALAP = 2, mobility = 1
+- $g_4$: ASAP = 2, ALAP = 2, mobility = 0
+- $g_5$: ASAP = 4, ALAP = 4, mobility = 0
+
+For this mobility, we cannot further reduce the number of functional units, so we still need 2 adders and 2 multipliers. However, we can schedule $g_3$ at either cycle 1 or cycle 2, so there are two possible schedules.
+#figure(
+  wavy.render(
+    ```
+      {
+        signal:
+        [
+          {name:'clk',wave:'p...'},
+          {name:'Adder 1',wave:'2x.2',data:'g1 g5'},
+          {name:'Adder 2',wave:'2x..',data:'g2'},
+          {name:'Multiplier 1',wave:'x2.x',data:'g3'},
+          {name:'Multiplier 2',wave:'x2.x',data:'g4'},
+        ],
+        config: { hscale: 2 },
+      }
+    ```.text,
+  ),
+  caption: [Mobility-based scheduling result time chart],
+)
+
+== Critical-path list scheduling
+
+- Priority: ($P(dot)$ denotes the priority of a node, and $d(dot)$ denotes the delay of a node)
+  - $P(g_1) = d(g_1) + d(g_4) + d(g_5) = 4$
+  - $P(g_2) = d(g_2) + d(g_4) + d(g_5) = 4$
+  - $P(g_3) = d(g_3) + d(g_5) = 3$
+  - $P(g_4) = d(g_4) + d(g_5) = 3$
+  - $P(g_5) = d(g_5) = 1$
+
+- Schedule:
+  - Cycle 1: Ready: $g_1, g_2, g_3$. Schedule $g_1$ and $g_2$  to $A_1$ and $A_2$.
+  - Cycle 2: Ready: $g_3, g_4$. Schedule $g_3$ to $A_1$.
+  - Cycle 4: Ready: $g_4$. Schedule $g_4$ to $A_1$.
+  - Cycle 5: Ready: $g_5$. Schedule $g_5$ to $A_1$.
+
+#figure(
+  wavy.render(
+    ```
+      {
+        signal:
+        [
+          {name:'clk',wave:'p.....'},
+          {name:'A1',wave:'22.2.2',data:'g1 g3 g4 g5'},
+          {name:'A2',wave:'2x....',data:'g2'},
+        ],
+        config: { hscale: 2 },
+      }
+    ```.text,
+  ),
+  caption: [Critical-path list scheduling result time chart],
+)
