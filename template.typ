@@ -105,6 +105,7 @@
 
 #let project(
   title: "",
+  subtitle: auto,
   class: "",
   student: "",
   id: "",
@@ -116,6 +117,10 @@
 ) = {
   let resolved-title = {
     if header-title == auto { title } else { header-title }
+  }
+
+  let resolved-subtitle = {
+    if subtitle == auto { "" } else { subtitle }
   }
 
   let resolved-right = {
@@ -172,6 +177,10 @@
     #text(size: 15pt, weight: "bold")[#class]
     #v(0.6em)
     #text(size: 18pt, weight: "bold")[#title]
+    #if (subtitle != auto) [
+      #v(-6pt)
+      #text(size: 12pt, weight: "bold")[#resolved-subtitle]
+    ]
   ]
 
   v(1em)

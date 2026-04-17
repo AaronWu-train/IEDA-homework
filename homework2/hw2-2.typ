@@ -6,11 +6,12 @@
 
 #show: project.with(
   title: "Homework 2",
+  subtitle: "(Problems 6-8)",
   class: "Introduction to Electronic Design Automation",
   student: "吳亞倫",
   id: "B13901011",
   department: "電機工程學系",
-  header-title: "IEDA Homework 2",
+  header-title: "IEDA Homework 2 (part 2)",
   theme: palette.gray,
 )
 
@@ -31,3 +32,9 @@
 //                       Start here
 // -------------------------------------------------------
 
+#counter(heading).update(5)
+= Two-level Logic Minimization
+
+= Static Timing Analysis
+
+= Technology Mapping
