@@ -38,8 +38,88 @@
 = Design Methodology and Design Flow
 
 == // 1. (a)
+=== Modeling
 
-#pagebreak()
+- *Brain signal model:* Model normal brain signals and seizure-related signals. This helps the system identify abnormal activity.
+- *Seizure progression model:* Model how a seizure starts and develops over time. This helps the device detect seizure early and respond at the correct time.
+- *Electrode-tissue interaction model:* Model how the electrodes sense neural signals and how electrical stimulation affects brain tissue.
+- *Power and thermal model:* Model power consumption and heat generation, because the device is implanted in the brain and must remain safe.
+
+=== Design
+
+- *Sensing design:* Design electrodes and low-noise circuits to acquire weak brain signals clearly and reliably.
+- *Detection design:* Design an algorithm or decision logic to determine whether seizure activity is happening or about to happen.
+- *Control design:* Design when stimulation should be triggered and determine the proper pulse parameters, such as amplitude, duration, and frequency.
+- *Implant hardware design:* Design the stimulator, battery, chip size, and package so the device can work safely for a long time inside the body.
+
+=== Analysis
+
+- *Detection performance analysis:*
+  Analyze detection accuracy, false alarm rate, and detection latency.
+- *Stimulation effectiveness and safety analysis:*
+  Analyze whether stimulation can suppress seizure without damaging brain tissue.
+- *Power analysis:*
+  Analyze energy consumption and battery lifetime.
+- *System-level analysis:*
+  Analyze whether sensing, detection, control, and stimulation can operate correctly together in real time.
+
+
+== 　// 1. (b)
+For each components of the CNN system, I suggest components should be implemented as follows:
+
++ *Image pre-processing (Software / CPU):*
+
+  This stage includes image capture handling, resizing, normalization, and format conversion. It is better placed in software because it requires flexibility and is easier to modify when the input format or application setting changes. Its computation cost is also lower than the main CNN layers.
+
++ *Convolutional layers (Hardware / FPGA or ASIC):*
+
+  Convolutional layers should be implemented in hardware because they dominate the computation of the CNN. They require a large number of multiply-accumulate operations and have strong parallelism. Hardware acceleration can greatly improve throughput, reduce latency, and save power.
+
++ *Activation functions, ReLU (Hardware / FPGA or ASIC):*
+
+  ReLU is simple and highly regular. It is applied many times after convolutional layers, so placing it in hardware is efficient.
+
++ *Pooling layers (Hardware / FPGA or ASIC):*
+
+  Pooling layers should also be implemented in hardware because they are part of the repeated feature extraction pipeline. Their operations are simple and regular, which makes them suitable for efficient streaming hardware design. This helps maintain high throughput.
+
++ *Fully connected layers (Hardware / FPGA or ASIC):*
+
+  Fully connected layers involve many dense arithmetic operations, especially when the layer size is large. Therefore, they are also suitable for hardware acceleration. Implementing them in hardware improves inference speed and energy efficiency under real-time constraints.
+
++ *Output stage, softmax + classification (Software / CPU):*
+
+  The output stage has much lower computation cost than convolutional and fully connected layers. It also includes final decision logic, which may need to be adjusted depending on the application. Therefore, it is more suitable to place this part in software for better flexibility and easier debugging.
+
++ *Overall control and scheduling (Software / CPU):*
+
+  The CPU should manage system control, memory/buffer handling, task scheduling, and communication between modules. These tasks involve control logic rather than massive parallel computation, so software is the more suitable choice.
+
+== // 1. (c)
+
+Main synthesis tasks in VLSI design flow include system specification, functional design, logic synthesis, circuit design, physical design and verification, fabrication, and packaging. In each of the tasks, the design is represented as follows:
+
++ *System specification:*
+  The design is represented as specification. At this stage, it describes system requirements, functions, performance goals, and interfaces at a very high level.
+
++ *Functional design:*
+  The design is represented as behavioral representation. At this stage, the system is described by functional blocks, algorithms, FSM, datapath, or behavioral HDL.
+
++ *Logic synthesis:*
+  The design is converted into structural representation at the logic level. The result is a gate-level netlist, composed of logic gates and flip-flops.
+
++ *Circuit design:*
+  The design is still a structural representation, but now at the transistor level. The result is a transistor-level circuit / schematic built with MOS transistors and their connections.
+
++ *Physical design and verification:*
+  The design is converted into physical representation. At this stage, it becomes chip layout data, including floorplan, placement, routing, and verification such as DRC/LVS.
+
++ *Fabrication:*
+  The physical layout is transferred into silicon manufacturing. The design is represented as masks / wafer patterns used to fabricate the chip.
+
++ *Packaging:*
+  The fabricated die is packaged into a usable IC. The design is represented as the final packaged chip ready for testing and system use.
+
 // ---------------------- Problem 2 ----------------------
 = Algorithm and Complexity
 
