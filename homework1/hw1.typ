@@ -481,84 +481,91 @@ The required timed automaton is as follows. The label RE stands for "Requesting"
     spacing: 1cm,
 
     // -- High Priority Producers --
-    node(
-      (0, 0),
-      align(center)[HP Idle \ #sym.circle.filled#sym.circle.filled],
-      shape: "circle",
-      name: <hp_idle>,
-      radius: 1cm,
-    ),
-    node((1, 0), [HP Req], shape: "rect", name: <t_hp_req>),
-    node((2, 0), align(center)[HP Wait], shape: "circle", name: <hp_wait>, radius: 1cm),
-    node((3, 0), [HP Produce], shape: "rect", name: <t_hp_prod>),
+    node((0, 0), align(center)[HP1 Idle \ #sym.circle.filled], shape: "circle", name: <hp1_idle>, radius: 1cm),
+    node((0, 1), [Request], shape: "rect", name: <t_hp1_req>),
+    node((0, 2), align(center)[HP1 Ready], shape: "circle", name: <hp1_ready>, radius: 1cm),
+    node((0, 3), [Produce], shape: "rect", name: <t_hp1_prod>),
+
+    node((3, 0), align(center)[HP2 Idle \ #sym.circle.filled], shape: "circle", name: <hp2_idle>, radius: 1cm),
+    node((3, 1), [Request], shape: "rect", name: <t_hp2_req>),
+    node((3, 2), align(center)[HP2 Ready], shape: "circle", name: <hp2_ready>, radius: 1cm),
+    node((3, 3), [Produce], shape: "rect", name: <t_hp2_prod>),
 
     // -- Low Priority Producers --
-    node((0, 1.5), align(center)[LP Idle \ #sym.circle.filled], shape: "circle", name: <lp_idle>, radius: 1cm),
-    node((1, 1.5), [LP Req], shape: "rect", name: <t_lp_req>),
-    node((2, 1.5), align(center)[LP Wait], shape: "circle", name: <lp_wait>, radius: 1cm),
-    node((3, 1.5), [LP Produce], shape: "rect", name: <t_lp_prod>),
+    node((1.5, 0), align(center)[LP Idle \ #sym.circle.filled], shape: "circle", name: <lp1_idle>, radius: 1cm),
+    node((1.5, 1), [Request], shape: "rect", name: <t_lp1_req>),
+    node((1.5, 2), align(center)[LP Ready], shape: "circle", name: <lp1_ready>, radius: 1cm),
+    node((1.5, 3), [Produce], shape: "rect", name: <t_lp1_prod>),
 
-    // -- Bounded Buffer (N=3) --
-    node(
-      (5, 0.75),
-      align(center)[Empty Buffer \ #sym.circle.filled#sym.circle.filled#sym.circle.filled],
-      shape: "circle",
-      name: <empty>,
-      radius: 1cm,
-    ),
-    node((5, 2.25), align(center)[Full Buffer], shape: "circle", name: <full>, radius: 1cm),
+    // -- Bounded Buffer --
+    node((1, 4), align(center)[Empty 1 \ #sym.circle.filled], shape: "circle", name: <empty1>, radius: 1cm),
+    node((2, 4), align(center)[Full 1], shape: "circle", name: <full1>, radius: 1cm),
+    node((1.5, 4.5), [　　], shape: "rect", name: <qt1>),
+
+    node((1, 5), align(center)[Empty 2 \ #sym.circle.filled], shape: "circle", name: <empty2>, radius: 1cm),
+    node((2, 5), align(center)[Full 2], shape: "circle", name: <full2>, radius: 1cm),
+
+    node((1.5, 5.5), [　　], shape: "rect", name: <qt2>),
+
+    node((1, 6), align(center)[Empty 3 \ #sym.circle.filled], shape: "circle", name: <empty3>, radius: 1cm),
+    node((2, 6), align(center)[Full 3], shape: "circle", name: <full3>, radius: 1cm),
 
     // -- Consumers --
+    node((3, 5), [Consumer \ Arrive], shape: "rect", name: <t_arrive>),
+
     node(
-      (0, 3),
-      align(center)[C Idle \ #sym.circle.filled#sym.circle.filled],
+      (3, 6),
+      align(center)[C Wait \ #sym.circle.filled#sym.circle.filled],
       shape: "circle",
-      name: <c_idle>,
+      name: <c_wait>,
       radius: 1cm,
     ),
-    node((1, 3), [C Req], shape: "rect", name: <t_c_req>),
-    node((2, 3), align(center)[C Wait], shape: "circle", name: <c_wait>, radius: 1cm),
-    node((3, 3), [Consume], shape: "rect", name: <t_consume>),
+    node((1.5, 6.75), [Consume], shape: "rect", name: <t_consume>),
 
     // ==========================
     // ARCS & ROUTING
     // ==========================
+    edge(<hp1_idle>, <t_hp1_req>, "-|>"),
+    edge(<t_hp1_req>, <hp1_ready>, "-|>"),
+    edge(<hp1_ready>, <t_hp1_prod>, "-|>"),
+    edge(<t_hp1_prod>, <hp1_idle>, "-|>", bend: 45deg),
 
-    // -- Edges: HP Lifecycle --
-    edge(<hp_idle>, <t_hp_req>, "-|>"),
-    edge(<t_hp_req>, <hp_wait>, "-|>"),
-    edge(<hp_wait>, <t_hp_prod>, "-|>"),
-    edge(<t_hp_prod>, <hp_idle>, "-|>", bend: -45deg),
+    edge(<hp2_idle>, <t_hp2_req>, "-|>"),
+    edge(<t_hp2_req>, <hp2_ready>, "-|>"),
+    edge(<hp2_ready>, <t_hp2_prod>, "-|>"),
+    edge(<t_hp2_prod>, <hp2_idle>, "-|>", bend: -45deg),
 
-    // -- Edges: LP Lifecycle --
-    edge(<lp_idle>, <t_lp_req>, "-|>"),
-    edge(<t_lp_req>, <lp_wait>, "-|>"),
-    edge(<lp_wait>, <t_lp_prod>, "-|>"),
-    edge(<t_lp_prod>, <lp_idle>, "-|>", bend: 45deg),
+    edge(<lp1_idle>, <t_lp1_req>, "-|>"),
+    edge(<t_lp1_req>, <lp1_ready>, "-|>"),
+    edge(<lp1_ready>, <t_lp1_prod>, "-|>"),
+    edge(<t_lp1_prod>, <lp1_idle>, "-|>", bend: 45deg),
 
-    // -- Edges: Inhibitor (Strict Priority Mechanism) --
-    // The line with a circle end (-o) disables LP Produce if HP is waiting
-    edge(<hp_wait>, <t_lp_prod>, "-o", stroke: red + 1.5pt, label-pos: 0.6, label: text(red)[Inhibitor]),
+    edge(<hp1_idle>, (0.8, 0), (0.8, 2.7), <t_lp1_prod>, "-|>"),
+    edge(<hp1_idle>, (0.7, 0.3), (0.7, 3), <t_lp1_prod>, "<|-"),
+    edge(<hp2_idle>, (2.2, 0), (2.2, 2.7), <t_lp1_prod>, "-|>"),
+    edge(<hp2_idle>, (2.3, 0.3), (2.3, 3), <t_lp1_prod>, "<|-"),
 
-    // -- Edges: Buffer Sync (Produce) --
-    edge(<empty>, <t_hp_prod>, "-|>"),
-    edge(<t_hp_prod>, <full>, "-|>"),
-    edge(<empty>, <t_lp_prod>, "-|>"),
-    edge(<t_lp_prod>, <full>, "-|>"),
+    edge(<t_lp1_prod>, <full1>, "-|>"),
+    edge(<t_hp1_prod>, <full1>, "-|>"),
+    edge(<t_hp2_prod>, <full1>, "-|>"),
+    edge(<empty1>, <t_lp1_prod>, "-|>"),
+    edge(<empty1>, <t_hp1_prod>, "-|>"),
+    edge(<empty1>, <t_hp2_prod>, "-|>"),
 
-    // -- Edges: Consumer Lifecycle --
-    edge(<c_idle>, <t_c_req>, "-|>"),
-    edge(<t_c_req>, <c_wait>, "-|>"),
-    edge(<c_wait>, <t_consume>, "-|>"),
-    edge(<t_consume>, <c_idle>, "-|>", bend: 45deg),
-
-    // -- Edges: Buffer Sync (Consume) --
-    edge(<full>, <t_consume>, "-|>"),
-    edge(<t_consume>, <empty>, "-|>"),
+    edge(<full1>, <qt1>, "-|>"),
+    edge(<qt1>, <empty1>, "-|>"),
+    edge(<empty2>, <qt1>, "-|>"),
+    edge(<qt1>, <full2>, "-|>"),
+    edge(<full2>, <qt2>, "-|>"),
+    edge(<qt2>, <empty2>, "-|>"),
+    edge(<empty3>, <qt2>, "-|>"),
+    edge(<qt2>, <full3>, "-|>"),
+    edge(<full3>, <t_consume>, "-|>"),
+    edge(<c_wait>, <t_consume>, "-|>", bend: 15deg),
+    edge(<t_consume>, <empty3>, "-|>"),
+    edge(<t_arrive>, <c_wait>, "-|>"),
   ),
-  caption: [The Petri net of the producer-consumer system.
-    Here, `HP`, `LP`, and `C` denote the high-priority producer, low-priority producer, and consumer, respectively, while `Empty Buffer` and `Full Buffer` represent the numbers of available and occupied buffer slots. The inhibitor arc from `HP Wait` to `LP Produce` enforces the priority policy by disabling `LP Produce` whenever a high-priority request is waiting. This design ensures that HP production is always served before LP production when both contend for the shared buffer.
-  ],
+  caption: [ Petri net of the producer-consumer system. For each producer, a token in `Idle` indicates that the producer is inactive and has not received a production request. The `Request` transition is triggered externally and nondeterministically, representing an arbitrary arrival of a production request. Once triggered, the producer moves to `Ready` and becomes eligible to produce. After firing `Produce`, the producer returns to `Idle`. The low-priority producer can fire `Produce` only when both high-priority producers are in `Idle`. The bounded buffer is modeled as a queue of size 3 using the places `Empty 1-3` and `Full 1-3`. The consumer removes items from the front of the queue, preserving FIFO order.],
 )
 
 #pagebreak()
