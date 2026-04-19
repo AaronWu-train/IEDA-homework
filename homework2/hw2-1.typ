@@ -529,6 +529,162 @@ $
 
 = Application of Quantified Boolean Formula
 
+== 　 // 4. (a)
+First of all, this game only has five stones, so it must terminate within at most five rounds. Hence, we can encode the winning condition of player 1 as the following QBF:
+
+$
+  exists M_1. forall M_2. exists M_3. forall M_4. exists M_5. quad Phi
+$
+
+where $M_t$ denotes the Boolean variables describing the move at round $t$, and $Phi$ is a Boolean formula encoding legality, state transition, and winning condition.
+
+
+We now define the move variables. Let $m_(t,i,a)$ denote “at round $t$, the player removes $a$ stones from pile $i$”. The possible moves are:
+
+$
+  m_(t,1,1), m_(t,1,2), m_(t,2,1), m_(t,2,2), m_(t,3,1)
+$
+
+Thus, $M_t$ is simply a shorthand for the set of move variables
+$
+  {m_(t,1,1), m_(t,1,2), m_(t,2,1), m_(t,2,2), m_(t,3,1)}.
+$
+
+Since each round consists of exactly one move, we impose a one-hot constraint:
+
+$
+  "ONE"_t = & (m_(t,1,1) or m_(t,1,2) or m_(t,2,1) or m_(t,2,2) or m_(t,3,1)) \
+            & and.big_(x != y in M_t) not (x and y)
+$
+
+which enforces that exactly one move is chosen at round $t$.
+
+Next, we encode the state. Instead of using integers, we use Boolean variables to represent whether each stone is still present. Let
+
+$
+  a_1^t, a_2^t, b_1^t, b_2^t, c^t
+$
+
+denote the existence of each stone after round $t$. Here, $a_1, a_2$ are the two stones in pile $1$, $b_1, b_2$ are the two stones in pile $2$, and $c$ is the unique stone in pile $3$.
+
+Initially, all stones are present:
+
+$
+  "I" = a_1^0 and a_2^0 and b_1^0 and b_2^0 and c^0
+$
+
+To avoid invalid encodings, we enforce monotonicity within each pile:
+
+$
+  "O" = & and.big_(t=0)^5 (a_2^t -> a_1^t) \
+        & and.big_(t=0)^5 (b_2^t -> b_1^t)
+$
+This ensures that the second stone in a pile cannot exist if the first stone has already been removed. Hence the only valid states are those where the stones in each pile are removed from the second stone to the first stone.
+
+Next, we ensure move legality. A move can only be applied if enough stones remain:
+
+$
+  "L"_t = & (m_(t,1,1) -> a_1^(t-1)) \
+          & (m_(t,1,2) -> a_2^(t-1)) \
+          & (m_(t,2,1) -> b_1^(t-1)) \
+          & (m_(t,2,2) -> b_2^(t-1)) \
+          & (m_(t,3,1) -> c^(t-1))
+$
+
+Now we define the state transition. Let $"T"_t$ encode how the state changes after round $t$. The chosen pile loses stones, while the others remain unchanged.
+
+#text(size: 10pt)[
+  $
+    "T"_t = & (m_(t,1,1) -> (
+                  (a_2^(t-1) -> (a_1^t and not a_2^t)) and
+                  (not a_2^(t-1) -> (not a_1^t and not a_2^t)) and
+                  (b_1^t <-> b_1^(t-1)) and
+                  (b_2^t <-> b_2^(t-1)) and
+                  (c^t <-> c^(t-1))
+                )) \
+            & and (m_(t,1,2) -> (
+                  (not a_1^t and not a_2^t) and
+                  (b_1^t <-> b_1^(t-1)) and
+                  (b_2^t <-> b_2^(t-1)) and
+                  (c^t <-> c^(t-1))
+                )) \
+            & and (m_(t,2,1) -> (
+                  (b_2^(t-1) -> (b_1^t and not b_2^t)) and
+                  (not b_2^(t-1) -> (not b_1^t and not b_2^t)) and
+                  (a_1^t <-> a_1^(t-1)) and
+                  (a_2^t <-> a_2^(t-1)) and
+                  (c^t <-> c^(t-1))
+                )) \
+            & and (m_(t,2,2) -> (
+                  (not b_1^t and not b_2^t) and
+                  (a_1^t <-> a_1^(t-1)) and
+                  (a_2^t <-> a_2^(t-1)) and
+                  (c^t <-> c^(t-1))
+                )) \
+            & and (m_(t,3,1) -> (
+                  (not c^t) and
+                  (a_1^t <-> a_1^(t-1)) and
+                  (a_2^t <-> a_2^(t-1)) and
+                  (b_1^t <-> b_1^(t-1)) and
+                  (b_2^t <-> b_2^(t-1))
+                ))
+  $
+]
+
+Finally, define the empty condition:
+
+$
+  "E"_t = not a_1^t and not a_2^t and not b_1^t and not b_2^t and not c^t
+$
+
+Thus, $"E"_t$ means that all stones have been removed after round $t$.
+
+Since player $1$ moves at rounds $1$, $3$, and $5$, player $1$ wins exactly when the game first becomes empty at one of these rounds:
+
+$
+  "W" = & "E"_1
+          or (not "E"_1 and not "E"_2 and "E"_3)
+          or (not "E"_1 and not "E"_2 and not "E"_3 and not "E"_4 and "E"_5)
+$
+
+Therefore, the final Boolean formula is
+
+$
+  Phi = & "I" and "O" and "W" and(and.big_(t=1)^5 ("ONE"_t and "L"_t and "T"_t))
+$
+
+This completes the QBF encoding of the winning condition for player $1$.
+
+== 　 // 4. (b)
+By manual reasoning, the formula is true. In part (a), the quantified variables are the move variables inside each $M_t$. Thus, to show the formula is true, it suffices to give a winning assignment strategy for player $P_1$.
+
+For the first move, let $P_1$ choose
+$
+  m_(1,3,1) = 1
+$
+and set all other variables in $M_1$ to $0$. This means that player $P_1$ removes the only stone from pile $3$. After this move, the state becomes
+$
+  (2,2,0).
+$
+
+Now the two remaining nonempty piles have the same number of stones. We claim that $P_1$ can always maintain this property. More precisely, the existential assignments for $M_3$ and $M_5$ are chosen according to the universally chosen move of $P_2$:
+
+- if $P_2$ chooses $m_(t,1,1) = 1$, then $P_1$ chooses $m_(t+1,2,1) = 1$;
+- if $P_2$ chooses $m_(t,1,2) = 1$, then $P_1$ chooses $m_(t+1,2,2) = 1$;
+- if $P_2$ chooses $m_(t,2,1) = 1$, then $P_1$ chooses $m_(t+1,1,1) = 1$;
+- if $P_2$ chooses $m_(t,2,2) = 1$, then $P_1$ chooses $m_(t+1,1,2) = 1$.
+
+In each case, all other move variables in that round are set to $0$, so the one-hot constraint is satisfied.
+
+Therefore, after every move of $P_2$, player $P_1$ makes the same move on the other nonempty pile. Hence the two piles remain equal after each move of $P_1$. Since the game starts from $(2,2,0)$ after the first move of $P_1$, this mirror strategy guarantees that whenever $P_2$ makes the piles unequal, $P_1$ immediately restores equality. As a result, $P_2$ can never take the last stone first, and eventually $P_1$ takes the last stone.
+
+Therefore, the QBF is true, and the corresponding winning strategy is:
+$
+  m_(1,3,1) = 1
+$
+for the first move, and afterwards choose the matching move on the other pile in response to player $P_2$'s move.
+
+
 #pagebreak()
 = Binary Decision Diagram
 
