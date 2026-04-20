@@ -378,11 +378,11 @@ which is the minimal product-of-sums form of $f$.
     node((0, 3), align(center)[$x_4$], name: <x4>, shape: "circle"),
     node((0, 4), align(center)[$x_5$], name: <x5>, shape: "circle"),
 
-    node((2, 0), " ", name: <n1>, shape: "circle"),
+    node((2, 0), [$n_1$], name: <n1>, shape: "circle"),
     edge(<x1>, <n1>, "-|>"),
     edge(<x2>, <n1>, "-|>"),
 
-    node((2, 1), " ", name: <n2>, shape: "circle"),
+    node((2, 1), [$n_2$], name: <n2>, shape: "circle"),
     edge(<x1>, <n2>, marks: (
       (inherit: "circle", pos: 0.3, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
@@ -392,11 +392,11 @@ which is the minimal product-of-sums form of $f$.
       (inherit: "|>", pos: 1, fill: auto),
     )),
 
-    node((2, 2), " ", name: <n3>, shape: "circle"),
+    node((2, 2), [$n_3$], name: <n3>, shape: "circle"),
     edge(<x3>, <n3>, "-|>"),
     edge(<x4>, <n3>, "-|>"),
 
-    node((2, 3), " ", name: <n4>, shape: "circle"),
+    node((2, 3), [$n_4$], name: <n4>, shape: "circle"),
     edge(<x3>, <n4>, marks: (
       (inherit: "circle", pos: 0.3, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
@@ -406,78 +406,70 @@ which is the minimal product-of-sums form of $f$.
       (inherit: "|>", pos: 1, fill: auto),
     )),
 
-    node((4, 4), " ", name: <n5>, shape: "circle"),
-    edge(<x5>, <n5>, "-|>"),
+    node((4, 2), [$n_5$], name: <n5>, shape: "circle"),
+    edge(<n2>, <n5>, marks: (
+      (inherit: "circle", pos: 0.3, fill: auto),
+      (inherit: "|>", pos: 1, fill: auto),
+    )),
     edge(<n4>, <n5>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
+      (inherit: "circle", pos: 0.3, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
 
-    node((5, 2), " ", name: <n6>, shape: "circle"),
-    edge(<n5>, <n6>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
+    node((4, 1), [$n_6$], name: <n6>, shape: "circle"),
+    edge(<n1>, <n6>, marks: (
+      (inherit: "circle", pos: 0.3, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
     edge(<n3>, <n6>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
+      (inherit: "circle", pos: 0.3, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
 
-    node((4, 3), " ", name: <n7>, shape: "circle"),
-    edge(<x5>, <n7>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
+    node((6, 2), [$n_7$], name: <n7>, shape: "circle"),
+    edge(
+      <x5>,
+      <n7>,
+      marks: (
+        (inherit: "circle", pos: 0.6, fill: auto),
+        (inherit: "|>", pos: 1, fill: auto),
+      ),
+      bend: -10deg,
+    ),
+    edge(<n5>, <n7>, marks: (
+      (inherit: "circle", pos: 0.5, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
-    edge(<n4>, <n7>, "-|>"),
 
-    node((5, 0), " ", name: <n8>, shape: "circle"),
-    edge(<n1>, <n8>, "-|>"),
-    edge(<n7>, <n8>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
-      (inherit: "|>", pos: 1, fill: auto),
-    )),
+    node((6, 4), [$n_8$], name: <n8>, shape: "circle"),
+    edge(<x5>, <n8>, "-|>"),
+    edge(<n5>, <n8>, "-|>"),
 
-    node((6, 1), " ", name: <n9>, shape: "circle"),
-    edge(<n2>, <n9>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
-      (inherit: "|>", pos: 1, fill: auto),
-    )),
+
+    node((7, 1), [$n_9$], name: <n9>, shape: "circle"),
     edge(<n6>, <n9>, marks: (
       (inherit: "circle", pos: 0.4, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
-
-    node((7, 3), " ", name: <n10>, shape: "circle"),
-    edge(<n3>, <n10>, marks: (
-      (inherit: "|>", pos: 1, fill: auto),
-    )),
-    edge(<x5>, <n10>, marks: (
-      (inherit: "|>", pos: 1, fill: auto),
-    )),
-
-    node((7, 0), " ", name: <n11>, shape: "circle"),
-    edge(<n8>, <n11>, marks: (
-      (inherit: "circle", pos: 0.4, fill: auto),
-      (inherit: "|>", pos: 1, fill: auto),
-    )),
-    edge(<n9>, <n11>, marks: (
+    edge(<n7>, <n9>, marks: (
       (inherit: "circle", pos: 0.4, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
 
-    node((8, 2), " ", name: <n12>, shape: "circle"),
-    edge(<n10>, <n12>, marks: (
+    node((8, 2), [$n_10$], name: <n10>, shape: "circle"),
+    edge(<n8>, <n10>, marks: (
       (inherit: "circle", pos: 0.4, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
-    edge(<n11>, <n12>, marks: (
+    edge(<n9>, <n10>, marks: (
+      (inherit: "circle", pos: 0.4, fill: auto),
       (inherit: "|>", pos: 1, fill: auto),
     )),
 
     node((10, 2), align(center)[$f$], name: <f>, shape: "rect"),
-    edge(<n12>, <f>, "-*-|>"),
+    edge(<n10>, <f>, "-*-|>"),
   ),
-  caption: [The AIG of $f$. Use total 12 nodes.],
+  caption: [The AIG of $f$. Use total 10 nodes.],
 )
 
 #pagebreak()
@@ -579,7 +571,8 @@ $
   "O" = & and.big_(t=0)^5 (a_2^t -> a_1^t) \
         & and.big_(t=0)^5 (b_2^t -> b_1^t)
 $
-This ensures that the second stone in a pile cannot exist if the first stone has already been removed. Hence the only valid states are those where the stones in each pile are removed from the second stone to the first stone.
+This ensures that the second stone in a pile cannot exist if the first stone has already been removed. Hence, in each two-stone pile, the first stone cannot be absent while the
+second stone is still present.
 
 Next, we ensure move legality. A move can only be applied if enough stones remain:
 
@@ -650,8 +643,17 @@ $
 Therefore, the final Boolean formula is
 
 $
-  Phi = & "I" and "O" and "W" and(and.big_(t=1)^5 ("ONE"_t and "L"_t and "T"_t))
+  Phi & = "I" and "O" and ("ONE"_1 and "L"_1 and "T"_1) and \
+      & quad (("ONE"_2 and "L"_2) -> (
+        "T"_2 and ("ONE"_3 and "L"_3 and "T"_3) and \
+      & quad quad (("ONE"_4 and "L"_4) -> (
+            "T"_4 and ("ONE"_5 and "L"_5 and "T"_5) and "W"
+          )))
 $
+Note that rounds 2 and 4 are guarded by implications because they are
+universally quantified. Hence illegal moves of player 2 do not falsify the QBF
+directly, while player 1 is still required to choose legal moves at rounds 1, 3,
+and 5.
 
 This completes the QBF encoding of the winning condition for player $1$.
 
@@ -760,16 +762,37 @@ The ROBDD of each of these functions is unique as shown below:
   ]
 ]
 
-*Induction step*: Assume the statement holds for any Boolean function for $n = 1, 2, dots, k-1$. We want to show that the statement also holds for $n = k$. Let $f(x_1, x_2, dots, x_k)$ be an n-input Boolean function. By Shannon expansion, we have
+*Induction step:* Assume the statement holds for any arbitrary Boolean function with
+$n = 1, 2, dots, k - 1$. We want to show that the statement also holds for
+$n = k$.
+
+Let
+$f(x_1, x_2, dots, x_k)$
+be a $k$-input Boolean function. By Shannon expansion, we have
 $
   f = x_1 f_(x_1) + not x_1 f_(not x_1).
 $
-By the definition of ROBDD, the root node is decided by the first variable $x_1$. The high child of the root node is the ROBDD of $f_(x_1)$, and the low child of the root node is the ROBDD of $f_(not x_1)$.
 
-By the induction hypothesis,$f_(x_1)$ and $f_(not x_1)$ are $k-1$ input Boolean functions, hence the ROBDDs of $f_(x_1)$ and $f_(not x_1)$ are unique. Therefore, the ROBDD of $f$ is also unique, since the root node is unique and the high and low children are unique. This completes the induction step.
+By the fixed variable ordering, the root node is labeled by $x_1$. Its high child
+must represent $f_(x_1)$, and its low child must represent $f_(not x_1)$.
 
-Thus, by induction, the ROBDD of any n-input Boolean function is unique.
+By the induction hypothesis, both $f_(x_1)$ and $f_(not x_1)$ are $(k-1)$-input Boolean functions, so
+the ROBDD of $f_(x_1)$ and the ROBDD
+of $f_(not x_1)$ is unique. Let these two unique ROBDDs be $D_1$ and
+$D_0$, respectively.
 
+If $D_1 = D_0$, then the root has two identical children, so by the reduction
+rule of ROBDD, the root is eliminated. Hence the ROBDD of $f$ is exactly
+$D_1$, which is unique.
+
+If $D_1 != D_0$, then the root remains. Now consider any rooted subgraph in
+$D_1$ and any rooted subgraph in $D_0$. If they represent the same Boolean
+function, then by the induction hypothesis each of them must be the unique
+ROBDD of that function. Therefore they are isomorphic and must be merged by
+the reduction rule. Hence, after all possible merges are performed, the resulting
+ROBDD is uniquely determined.
+
+Therefore, the ROBDD of $f$ is unique. This completes the induction step.
 #pagebreak()
 == 　 // 5. (b)
 $
