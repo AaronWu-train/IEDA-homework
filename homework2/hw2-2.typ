@@ -376,63 +376,114 @@ $
 $
 == 　// 6.(f)
 There are four minimum covers with 5 prime implicants:
+#columns(2)[
 
-$
-  G^*_1
-  =
-  macron(a) macron(b) macron(c) macron(e)
-  +
-  b macron(c) e
-  +
-  c macron(d) macron(e)
-  +
-  macron(a) macron(b) macron(c) macron(d)
-  +
-  a b e.
-$
 
-$
-  G^*_2
-  =
-  macron(a) macron(b) macron(c) macron(e)
-  +
-  b macron(c) e
-  +
-  c macron(d) macron(e)
-  +
-  macron(a) macron(b) macron(c) macron(d)
-  +
-  a b c.
-$
+  $
+    G^*_1
+    =
+    macron(a) macron(b) macron(c) macron(e)
+    +
+    b macron(c) e
+    +
+    c macron(d) macron(e)
+    +
+    macron(a) macron(b) macron(c) macron(d)
+    +
+    a b e.
+  $
 
-$
-  G^*_3
-  =
-  macron(a) macron(b) macron(c) macron(e)
-  +
-  b macron(c) e
-  +
-  c macron(d) macron(e)
-  +
-  macron(a) macron(c) macron(d) e
-  +
-  a b e.
-$
+  $
+    G^*_3
+    =
+    macron(a) macron(b) macron(c) macron(e)
+    +
+    b macron(c) e
+    +
+    c macron(d) macron(e)
+    +
+    macron(a) macron(b) macron(c) macron(d)
+    +
+    a b c.
+  $
+  #colbreak()
+  $
+    G^*_2
+    =
+    macron(a) macron(b) macron(c) macron(e)
+    +
+    b macron(c) e
+    +
+    c macron(d) macron(e)
+    +
+    macron(a) macron(c) macron(d) e
+    +
+    a b e.
+  $
 
-$
-  G^*_4
-  =
-  macron(a) macron(b) macron(c) macron(e)
-  +
-  b macron(c) e
-  +
-  c macron(d) macron(e)
-  +
-  macron(a) macron(c) macron(d) e
-  +
-  a b c.
-$
+  $
+    G^*_4
+    =
+    macron(a) macron(b) macron(c) macron(e)
+    +
+    b macron(c) e
+    +
+    c macron(d) macron(e)
+    +
+    macron(a) macron(c) macron(d) e
+    +
+    a b c.
+  $
+]
 
 = Static Timing Analysis
+== 　 // 7.(a)
+In this part, we constuct the circuit as a DAG, where each node $v in V$ represents a gate and each edge $e in E subset.eq V times V$ represents a connection between gates.
+Let $R(v)$ donate the required time at the input of node $v$, $A(v)$ donate the arrival time at the output of node $v$, and $d_(u,v)$ donates the delay from node $u$'s output to node $v$'s output.
+Also, we define the slack of node $v$ as
+$
+  S(v) = R(v) - A(v).
+$
+
+Suppose there is a node $v$ such that
+$
+  S(v) = R(v) - A(v) <= c
+$
+
+We want to show that there exists a path satifying every node on the path has slack at most $c$ from some primary input to $v$ and from $v$ to some primary output.
+
+=== 1. From some primary input to $v$
+First, if $v$ is a primary input, then we are done. Otherwise,
+since
+$
+  A(v) = max_(u: (u,v) in E) (A(u) + d_(u,v))
+$
+there exist a node $u$ such that there is an edge from $u$ to $v$ and
+$
+  A(v) = A(u) + d_(u,v).
+$
+And since
+$
+  R(u) = min_(w: (u,w) in E) (R(w) - d_(u,w)) <= R(v) - d_(u,v),
+$
+we have
+$
+  S(u) = R(u) - A(u) <= R(v) - d_(u,v) - A(u) = R(v) - A(v) = S(v) <= c.
+$
+Thus, we can apply the same argument on $u$ and repeat this process until we reach a primary input.
+
+=== 2. From $v$ to some primary output
+First, if $v$ is a primary output, then we are done. Otherwise,
+since
+$ R(v) = min_(w: (v,w) in E) (R(w) - d_(v,w)) $
+there exist a node $w$ such that there is an edge from $v$ to $w$ and
+$ R(v) = R(w) - d_(v,w). $
+And since
+$ A(w) = max_(x: (x,w) in E) (A(x) + d_(x,w)) >= A(v) + d_(v,w), $
+we have
+$ S(w) = R(w) - A(w) <= R(v) + d_(v,w) - A(v) - d_(v,w) = R(v) - A(v) = S(v) <= c. $
+Thus, we can apply the same argument on $w$ and repeat this process until we reach a primary output.
+
+Hence, there exists a path from some primary input to $v$ and from $v$ to some primary output such that the slack of each node on these paths is at most $c$.
 
 = Technology Mapping
