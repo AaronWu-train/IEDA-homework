@@ -695,12 +695,10 @@ The c++ code of both versions and the input/output files are included in the app
 
 === Appendix: `input.txt`
 
-#text(size: 6pt, raw(read("dagon/input.txt"), lang: "txt", block: true))
+#text(size: 6.5pt, zebraw(raw(read("dagon/input.txt"), lang: "txt", block: true), numbering: false))
 
 === Appendix: `output.txt`
-
-#text(size: 7pt, raw(read("dagon/output.txt"), lang: "txt", block: true))
+#text(size: 7.5pt, zebraw(raw(read("dagon/output.txt"), lang: "txt", block: true), numbering: false))
 
 === Appendix: `output_improve.txt`
-
-#text(size: 7pt, raw(read("dagon/output_improve.txt"), lang: "txt", block: true))
+#text(size: 7.5pt, zebraw(raw(read("dagon/output_improve.txt"), lang: "txt", block: true), numbering: false))
