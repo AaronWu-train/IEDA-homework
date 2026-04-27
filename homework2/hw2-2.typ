@@ -599,9 +599,8 @@ The equivalence DAG of the giver circuit is as @dag below. The delay of each gat
 
 In this problem, I wrote two versions of the program.
 The first one is the basic DAGON mapping algorithm.
-The second one is an improved version, where I insert two inverters on every
-original edge before running DAGON.
-This gives the mapper more chance to use `INV` and `buf`.
+The second one is an improved version, where I allow adding a pair of inverters for each wire in the
+subject graph and ddding a pattern of a wire that matches two inverters with zero cost.
 
 The node numbering I used in my input file is shown in @tm-numbering.
 
@@ -639,7 +638,7 @@ Thus, the final cover without improvement is obtained by tracing back from
 output node 17:
 
 $
-  {8: "nand2", 9: "inv", 10: "nand2", 11: "nand2", 12: "inv", 13: "nand2", 14: "nand2", 17: "nand3"}.
+  {8: "nand2", space 9: "inv", space 10: "nand2", space 11: "nand2", space 12: "inv", space 13: "nand2", space 14: "nand2", space 17: "nand3"}.
 $
 
 The `nand3` at node 17 covers nodes 15, 16, and 17 together.
