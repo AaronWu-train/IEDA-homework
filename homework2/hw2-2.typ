@@ -682,26 +682,25 @@ final cost is reduced.
 However, if we only apply the original DAGON algorithm directly on the given
 subject graph, the answer is still $15$.
 
-#pagebreak()
-== Appendix: `dagon.cpp`
+The c++ code of both versions and the input/output files are included in the appendix.
+
+
+=== Appendix: `dagon.cpp`
 
 #text(size: 7pt, raw(read("dagon/dagon.cpp"), lang: "cpp", block: true))
 
-#pagebreak()
-== Appendix: `dagon_improve.cpp`
+=== Appendix: `dagon_improve.cpp`
 
 #text(size: 7pt, raw(read("dagon/dagon_improve.cpp"), lang: "cpp", block: true))
 
-#pagebreak()
-== Appendix: `input.txt`
+=== Appendix: `input.txt`
 
 #text(size: 6pt, raw(read("dagon/input.txt"), lang: "txt", block: true))
 
-#pagebreak()
-== Appendix: `output.txt`
+=== Appendix: `output.txt`
 
 #text(size: 7pt, raw(read("dagon/output.txt"), lang: "txt", block: true))
 
-== Appendix: `output_improve.txt`
+=== Appendix: `output_improve.txt`
 
 #text(size: 7pt, raw(read("dagon/output_improve.txt"), lang: "txt", block: true))
