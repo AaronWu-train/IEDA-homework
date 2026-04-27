@@ -670,7 +670,7 @@ Next, for the improved version, the output on original nodes is:
     [16], [3], [`inv`],
     [17], [12], [`oai21`],
   ),
-  caption: [Improved result on original subject nodes],
+  caption: [Improved result on original subject nodes. Only contains cost and cell at the original gate outputs, without the inserted inverters. For more details, see `output_improve.txt` in Appendix.],
 )
 
 The minimum total area becomes $12$.
