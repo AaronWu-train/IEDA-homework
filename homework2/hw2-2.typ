@@ -600,7 +600,7 @@ The equivalence DAG of the giver circuit is as @dag below. The delay of each gat
 In this problem, I wrote two versions of the program.
 The first one is the basic DAGON mapping algorithm.
 The second one is an improved version, where I allow adding a pair of inverters for each wire in the
-subject graph and ddding a pattern of a wire that matches two inverters with zero cost.
+subject graph and adding a pattern of a wire that matches two inverters with zero cost.
 
 The node numbering I used in my input file is shown in @tm-numbering.
 
