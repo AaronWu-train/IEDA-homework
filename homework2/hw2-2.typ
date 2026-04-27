@@ -678,6 +678,7 @@ This is smaller than $15$ because the inserted inverter pairs create extra
 matching choices.
 In particular, node 17 can be matched by `oai21` in the improved graph, so the
 final cost is reduced.
+
 However, if we only apply the original DAGON algorithm directly on the given
 subject graph, the answer is still $15$.
 
