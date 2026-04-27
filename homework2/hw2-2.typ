@@ -542,7 +542,7 @@ The equivalence DAG of the giver circuit is as @dag below. The delay of each gat
       label-pos: 0.3,
       label-sep: 1pt,
     ),
-    edge(<g1>, (3.5, 0), "-", label-pos: 0.6, label: [$(5,4,-1)$], stroke: red, label-sep: 1pt),
+    edge(<g1>, (4, 0), "-", label-pos: 0.45, label: [$(5,4,-1)$], stroke: red, label-sep: 1pt),
     edge(
       (4, 0.0),
       (4, 1.5),
@@ -579,7 +579,7 @@ The equivalence DAG of the giver circuit is as @dag below. The delay of each gat
     edge(<g6>, <z1>, "-|>", label-pos: 0.45, label: [$(16,16,0)$], label-sep: 1pt),
     edge(<g7>, (9, 4), (9, 6), <ff>, "-|>", label-pos: 0.8, label: [$(15,14,-1)$], stroke: red, label-sep: 1pt),
     edge(<ff>, (0.7, 6), (0.7, 4), <g2>, "-|>", label-pos: 0.2, label: [$(1,1,0)$], label-sep: 1pt),
-    edge((3.45, 0), <g4>, "*-|>", label-pos: 0.5, label: [$(5,11,6)$], label-sep: 1pt),
+    edge((3.95, 0), <g4>, "*-|>", label-pos: 0.5, label: [$(5,11,6)$], label-sep: 1pt),
 
     node((rel: (275deg, 6mm), to: <g1>), align(center)[$g_1$], stroke: 0pt),
     node((rel: (90deg, 7.5mm), to: <g2>), align(center)[$g_2$], stroke: 0pt),
