@@ -492,7 +492,7 @@ Thus, we can apply the same argument on $w$ and repeat this process until we rea
 Hence, there exists a path from some primary input to $v$ and from $v$ to some primary output such that the slack of each node on these paths is at most $c$.
 
 == 　// 7.(b)
-The equivalence DAG of the giver circuit is as @dag below. The delay of each gate is labled on the corresponding node. Arrival time, required time and slack of each node are also labled on the corresponding node in the format of $(a, r, s)$, where $a$ is the arrival time, $r$ is the required time and $s$ is the slack. The critical path is highlighted in red.
+The equivalence DAG of the giver circuit is as @dag below. The delay of each gate is labled on the corresponding node. Arrival time, required time and slack of each node are labled on the corresponding edge in the format of $(a, r, s)$, where $a$ is the arrival time, $r$ is the required time and $s$ is the slack. The critical path is highlighted in red.
 
 #figure(
   diagram(
