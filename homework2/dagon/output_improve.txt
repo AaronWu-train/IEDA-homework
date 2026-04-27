@@ -1,0 +1,57 @@
+Minimum total cost = 12
+
+[Original nodes]
+node 0 (PI): PI, cost = 0
+node 1 (PI): PI, cost = 0
+node 2 (PI): PI, cost = 0
+node 3 (PI): PI, cost = 0
+node 4 (PI): PI, cost = 0
+node 5 (PI): PI, cost = 0
+node 6 (PI): PI, cost = 0
+node 7 (PI): PI, cost = 0
+node 8 (NAND): cost = 2, cell = nand2
+node 9 (INV): cost = 1, cell = inv
+node 10 (NAND): cost = 5, cell = nand2
+node 11 (NAND): cost = 2, cell = nand2
+node 12 (INV): cost = 1, cell = inv
+node 13 (NAND): cost = 5, cell = nand2
+node 14 (NAND): cost = 10, cell = nand2
+node 15 (NAND): cost = 2, cell = nand2
+node 16 (INV): cost = 3, cell = inv
+node 17 (NAND): cost = 12, cell = oai21  [OUTPUT]
+
+[Inserted inverter-pair nodes]
+node 18 (INV): cost = 1, cell = inv
+node 19 (INV): cost = 0, cell = buf
+node 20 (INV): cost = 1, cell = inv
+node 21 (INV): cost = 0, cell = buf
+node 22 (INV): cost = 1, cell = inv
+node 23 (INV): cost = 0, cell = buf
+node 24 (INV): cost = 3, cell = inv
+node 25 (INV): cost = 2, cell = buf
+node 26 (INV): cost = 0, cell = buf
+node 27 (INV): cost = 1, cell = inv
+node 28 (INV): cost = 1, cell = inv
+node 29 (INV): cost = 0, cell = buf
+node 30 (INV): cost = 1, cell = inv
+node 31 (INV): cost = 0, cell = buf
+node 32 (INV): cost = 1, cell = inv
+node 33 (INV): cost = 0, cell = buf
+node 34 (INV): cost = 3, cell = inv
+node 35 (INV): cost = 2, cell = buf
+node 36 (INV): cost = 0, cell = buf
+node 37 (INV): cost = 1, cell = inv
+node 38 (INV): cost = 3, cell = aoi21
+node 39 (INV): cost = 4, cell = inv
+node 40 (INV): cost = 3, cell = aoi21
+node 41 (INV): cost = 4, cell = inv
+node 42 (INV): cost = 1, cell = inv
+node 43 (INV): cost = 0, cell = buf
+node 44 (INV): cost = 1, cell = inv
+node 45 (INV): cost = 0, cell = buf
+node 46 (INV): cost = 3, cell = inv
+node 47 (INV): cost = 2, cell = buf
+node 48 (INV): cost = 9, cell = aoi21
+node 49 (INV): cost = 10, cell = inv
+node 50 (INV): cost = 2, cell = buf
+node 51 (INV): cost = 3, cell = inv

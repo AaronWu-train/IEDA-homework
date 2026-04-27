@@ -1,0 +1,19 @@
+Minimum total cost = 15
+node 0: PI, cost = 0
+node 1: PI, cost = 0
+node 2: PI, cost = 0
+node 3: PI, cost = 0
+node 4: PI, cost = 0
+node 5: PI, cost = 0
+node 6: PI, cost = 0
+node 7: PI, cost = 0
+node 8: cost = 2, cell = nand2
+node 9: cost = 1, cell = inv
+node 10: cost = 5, cell = nand2
+node 11: cost = 2, cell = nand2
+node 12: cost = 1, cell = inv
+node 13: cost = 5, cell = nand2
+node 14: cost = 12, cell = nand2
+node 15: cost = 2, cell = nand2
+node 16: cost = 3, cell = inv
+node 17: cost = 15, cell = nand3
