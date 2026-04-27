@@ -4,6 +4,7 @@
 #import "@preview/k-mapper:1.4.0": *
 #import "@preview/zebraw:0.6.1": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
+#import "@preview/zap:0.5.0"
 #import "@preview/wavy:0.1.3"
 #show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
 #show raw.where(lang: "wavy"): it => wavy.render(it.text)
@@ -593,5 +594,114 @@ The equivalence DAG of the giver circuit is as @dag below. The delay of each gat
   caption: "static timing analysis result",
 )<dag>
 
+#pagebreak()
 = Technology Mapping
 
+In this problem, I wrote two versions of the program.
+The first one is the basic DAGON mapping algorithm.
+The second one is an improved version, where I insert two inverters on every
+original edge before running DAGON.
+This gives the mapper more chance to use `INV` and `buf`.
+
+The node numbering I used in my input file is shown in @tm-numbering.
+
+#figure(
+  image("figure1.png", width: 80%),
+  caption: [Node numbering used in `input.txt`],
+) <tm-numbering>
+
+First, for the basic version without improvement, the result is:
+
+#figure(
+  table(
+    columns: (1fr, 1.4fr, 1.6fr),
+    inset: 6pt,
+    align: center,
+    stroke: 0.7pt,
+
+    [Node], [Minimum cost], [Selected cell],
+    table.hline(),
+    [8], [2], [`nand2`],
+    [9], [1], [`inv`],
+    [10], [5], [`nand2`],
+    [11], [2], [`nand2`],
+    [12], [1], [`inv`],
+    [13], [5], [`nand2`],
+    [14], [12], [`nand2`],
+    [15], [2], [`nand2`],
+    [16], [3], [`inv`],
+    [17], [15], [`nand3`],
+  ),
+  caption: [Optimal cost and selected cell of each subject node],
+)
+
+Thus, the final cover without improvement is obtained by tracing back from
+output node 17:
+
+$
+  {8: "nand2", 9: "inv", 10: "nand2", 11: "nand2", 12: "inv", 13: "nand2", 14: "nand2", 17: "nand3"}.
+$
+
+The `nand3` at node 17 covers nodes 15, 16, and 17 together.
+Therefore, the minimum total area is
+
+$
+  2 + 1 + 2 + 2 + 1 + 2 + 2 + 3 = 15.
+$
+
+Next, for the improved version, the output on original nodes is:
+
+#figure(
+  table(
+    columns: (1fr, 1.4fr, 1.6fr),
+    inset: 6pt,
+    align: center,
+    stroke: 0.7pt,
+
+    [Node], [Minimum cost], [Selected cell],
+    table.hline(),
+    [8], [2], [`nand2`],
+    [9], [1], [`inv`],
+    [10], [5], [`nand2`],
+    [11], [2], [`nand2`],
+    [12], [1], [`inv`],
+    [13], [5], [`nand2`],
+    [14], [10], [`nand2`],
+    [15], [2], [`nand2`],
+    [16], [3], [`inv`],
+    [17], [12], [`oai21`],
+  ),
+  caption: [Improved result on original subject nodes],
+)
+
+The minimum total area becomes $12$.
+This is smaller than $15$ because the inserted inverter pairs create extra
+matching choices.
+In particular, node 17 can be matched by `oai21` in the improved graph, so the
+final cost is reduced.
+However, if we only apply the original DAGON algorithm directly on the given
+subject graph, the answer is still $15$.
+
+#pagebreak()
+== Appendix: `dagon.cpp`
+
+#text(size: 7pt, raw(read("dagon/dagon.cpp"), lang: "cpp", block: true))
+
+#pagebreak()
+== Appendix: `dagon_improve.cpp`
+
+#text(size: 7pt, raw(read("dagon/dagon_improve.cpp"), lang: "cpp", block: true))
+
+#pagebreak()
+== Appendix: `input.txt`
+
+#text(size: 6pt, raw(read("dagon/input.txt"), lang: "txt", block: true))
+
+#pagebreak()
+== Appendix: `output.txt`
+
+#text(size: 7pt, raw(read("dagon/output.txt"), lang: "txt", block: true))
+
+== Appendix: `output_improve.txt`
+
+#text(size: 7pt, raw(read("dagon/output_improve.txt"), lang: "txt", block: true))
