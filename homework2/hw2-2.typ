@@ -606,7 +606,7 @@ This gives the mapper more chance to use `INV` and `buf`.
 The node numbering I used in my input file is shown in @tm-numbering.
 
 #figure(
-  image("figure1.png", width: 80%),
+  image("dagon_node_assign.png", width: 80%),
   caption: [Node numbering used in `input.txt`],
 ) <tm-numbering>
 
