@@ -100,9 +100,9 @@ Using procedure `robdd_build` to $f_c$, we have
     & arrow.r.long^(eta) "robdd_build"(b ¬d, 2) \
     & #h(2em) arrow.r.long^(eta) "robdd_build"(¬d, 4) \
     & #h(2em) #h(2em) v_5 = (d, v_0, v_1) \
-    & #h(2em) arrow.r.long^(lambda) "robdd_build"(d, 4) \
-    & #h(2em) #h(2em) v_2 = (d, v_1, v_0) \
-    & #h(2em) v_10 = (b, v_5, v_2) \
+    & #h(2em) arrow.r.long^(lambda) "robdd_build"(0, 4) \
+    & #h(2em) #h(2em) v_0 \
+    & #h(2em) v_10 = (b, v_5, v_0) \
     & v_11 = (a, v_9, v_10) \
   $
 ]
@@ -170,7 +170,7 @@ Hence, the shared ROBDDs of $f$, $f_c$ and $f_(not c)$ are as shown as below (@1
     node((3, 1), align(center)[$b$], name: <v10>, shape: "circle"),
     node((rel: (0deg, 8mm), to: <v10>), align(center)[$v_10$], stroke: 0pt),
     edge(<v10>, <v5>, "-latex"),
-    edge(<v10>, <v2>, "--latex", stroke: red),
+    edge(<v10>, <zero>, "--latex", stroke: red),
     
     node((4, 1), align(center)[$b$], name: <v12>, shape: "circle"),
     node((rel: (0deg, 8mm), to: <v12>), align(center)[$v_12$], stroke: 0pt),
@@ -222,6 +222,63 @@ Hence, the shared ROBDDs of $f$, $f_c$ and $f_(not c)$ are as shown as below (@1
   caption: [The shared ROBDDs of $f$, $f_c$ and $f_(not c)$. \ Red dashed edge represents 0-edge, and black solid edge represents 1-edge.],
 )<1b_robdd>
 
+== // 1. (c)
+Since$ exists c. f = f_c + f_(not c) = "ITE"(f_c, 1, f_(not c)) = "ITE"(v_11, 1, v_14) $
+we can use the ROBDD in @1b_robdd to compute the ROBDD of $"ITE"(f_c, 1, f_(not c))$. Hence we have:
+$
+  & "ITE"(f_c, 1, f_(not c)) \
+  & = "ITE"(v_11, 1, v_14) \
+  & = "ITE"(a, space.third
+      "ITE"(v_9, 1, v_12), space.third
+      "ITE"(v_10, 1, v_13))) \
+  & = "ITE"(a, space.third
+      "ITE"(
+        b, space.quarter
+        "ITE"(v_2, 1, 1), space.quarter
+        "ITE"(v_5, 1, v_2)
+      ), space.third
+      "ITE"(
+        b, space.quarter
+        "ITE"(v_5, 1, v_2), space.quarter
+        "ITE"(0, 1, 0)
+      ))
+$
+since $v_2 = d$ and $v_5 = ¬d$, we have
+$
+  & "ITE"(v_2, 1, 1) = 1 \
+  & "ITE"(v_5, 1, v_2) = "ITE"(¬d, 1, d) = 1 \
+  & "ITE"(0, 1, 0) = "ITE"(d, 1, 0) = 0. \
+$
+Therefore,
+$
+  & "ITE"(f_c, 1, f_(not c)) \
+  & = "ITE"(a, space.third
+      "ITE"(b,1,1), space.third
+      "ITE"(b,1, 0)
+    ) \
+  & = "ITE"(a, 1, b) \
+  & = a + b
+$
+The ROBDD of $"ITE"(f_c, 1, f_(not c)) = "ITE"(a, 1, b) = a + b$ is as shown as below (@1c_robdd).
+
+#figure(
+  diagram(
+    node-stroke: 1.2pt,
+    edge-stroke: 1.2pt,
+    spacing: 1.5cm,
+    node((0.5, 0), align(center)[$a$], name: <va>, shape: "circle"),
+    node((0, 1), align(center)[$b$], name: <vb>, shape: "circle"),
+    
+    edge(<va>, <one>, "-latex"),
+    edge(<va>, <vb>, "--latex", stroke: red),
+    edge(<vb>, <one>, "-latex"),
+    edge(<vb>, <zero>, "--latex", stroke: red),
+    
+    node((0, 2), align(center)[$0$], name: <zero>, shape: "rect"),
+    node((1, 2), align(center)[$1$], name: <one>, shape: "rect"),
+  ),
+  caption: [The ROBDD of $"ITE"(f_c, 1, f_(not c))$.],
+)<1c_robdd>
 #pagebreak()
 // ---------------------- Problem 2 ----------------------
 = SAT Solving
