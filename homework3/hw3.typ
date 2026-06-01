@@ -293,6 +293,22 @@ The ROBDD of $"ITE"(f_c, 1, f_(not c)) = "ITE"(a, 1, b) = a + b$ is as shown as 
 // ---------------------- Problem 4 ----------------------
 = Characteristic Function
 
+== // 4. (a)
+The set of states each of which has no direct transition to itself has characteristic function of $ F(bold(s)) = not T(bold(s), bold(s)) $
+
+== // 4. (b)
+The set of states that can be reached from C in exactly two transitions has characteristic function of
+$
+  G(bold(s')) = exists bold(s), bold(s_1). C(bold(s)) and T(bold(s), bold(s_1)) and T(bold(s_1), bold(s')) \
+$
+
+== // 4. (c)
+The set of states that  each have a unique next state has characteristic function of
+$
+  H(bold(s)) = exists bold(s_1). (T(bold(s), bold(s_1)) and forall
+    bold(s_2). ((T(bold(s), bold(s_1)) and T(bold(s), bold(s_2))) -> bold(s_1) = bold(s_2))
+  )
+$
 
 
 
