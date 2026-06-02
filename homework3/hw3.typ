@@ -6,6 +6,8 @@
 #import "@preview/wavy:0.1.3"
 #import "@preview/algorithmic:1.0.7"
 #import "@preview/zap:0.4.0"
+#import "@preview/subpar:0.2.2"
+
 #show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
 #show raw.where(lang: "wavy"): it => wavy.render(it.text)
 #set scale(reflow: true)
@@ -394,6 +396,115 @@ root
 
 == // 2. (c)
 The search tree in solving the above CNF formula with implication and conflict-based learning is shown as below.
+
+
+#set list(marker: ([#sym.bullet], [#sym.bullet.stroked], [#sym.bullet.tri]))
+
+#let diagram_2c_1 = diagram(
+  node-stroke: 1.5pt,
+  edge-stroke: 1.5pt,
+  spacing: 0.6cm,
+  node((0, 0), align(center)[$a$], name: <a1>, shape: "circle"),
+  
+  node((-0.5, 2), align(center)[$b$], name: <b1>, shape: "circle"),
+ 
+  node((-1, 4), align(center)[#text(red, $times$, size: 20pt)], name: <c1>,  stroke: 0pt,),
+  
+  
+  edge(<a1>, <b1>, "--}>", label: [$a=0$], label-pos: 0.2),
+  edge(<b1>, <c1>, "--}>", label: [$b=0$], label-pos: 0.2),
+)
+
+
+#let diagram_2c_2 = diagram(
+  node-stroke: 1.5pt,
+  edge-stroke: 1.5pt,
+  spacing: 0.8cm,
+  node((0, -2), align(center)[$a$], name: <a1>, shape: "circle"),
+  node((-1, 2), align(center)[#text(red, $times$, size: 20pt)], name: <c1>,  stroke: 0pt,),
+  edge(<a1>, <c1>, "--}>", label: [$a=0$], label-pos: 0.4),   
+)
+
+#let diagram_2c_3 = diagram(
+  node-stroke: 1.5pt,
+  edge-stroke: 1.5pt,
+  spacing: 0.6cm,
+  node((0, -2), align(center)[$a$], name: <a1>, shape: "circle"),
+  node((-1, 0), align(center)[#text(red, $times$, size: 20pt)], name: <er1>,  stroke: 0pt,),
+  
+  node((1, 0), align(center)[$b$], name: <b1>, shape: "circle"),
+  node((0.5, 2), align(center)[$c$], name: <c1>, shape: "circle"),
+  node((0, 4), align(center)[$d$], name: <d1>, shape: "circle"),
+  node((0, 6), align(center)[SAT], name: <sat>, shape: "rect", ),
+  
+
+
+  edge(<a1>, <er1>, "--}>", label: [$a=0$], label-pos: 0.4),
+  edge(<a1>, <b1>, "--}>", label: [$a=1$], label-pos: 0.4),
+  edge(<b1>, <c1>, "--}>", label: [$b=0$], label-pos: 0.4),
+  edge(<c1>, <d1>, "--}>", label: [$c=0$], label-pos: 0.4),
+  edge(<d1>, <sat>, "--}>", label: [$d=0$], label-pos: 0.4),
+)
+
+
+
+- *First conflict*:
+  #subpar.grid(
+    figure(  scale(88%, diagram_2c_1), caption: [
+      Search Tree
+    ]), <a>,
+    figure(image("assets/2c_imp1.png"), caption: [
+      Implication graph
+    ]), <b>,
+    columns: (1fr, 4fr),
+    caption: [The search tree and implication graph of first conflict in solving],
+    label: <full>,
+  )
+  - Learning clauses:
+    - Resolve $C_2$ and $C_5$ on $d$, we learned $R_1 = (a + ¬c + e)$.
+    - Resolve $C_4$ and $R_1$ on $e$, we learned $R_2 = (a + ¬c)$.
+    - Resolve $C_1$ and $R_2$ on $c$, we learned $R_3 = (a + b)$.
+  - $R_2$ is the 1-UIP clause, so we add $C_10 = R_2 = (a + ¬c)$ to the clause set, and backtrack to the decision level of 1.
+- *Second conflict*:
+  #subpar.grid(
+    figure(  scale(88%, diagram_2c_2), caption: [
+      Search Tree
+    ]), <a>,
+    figure(image("assets/2c_imp2.png"), caption: [
+      Implication graph
+    ]), <b>,
+    columns: (2fr, 9fr),
+    caption: [The search tree and implication graph of second conflict in solving],
+    label: <full>,
+  )
+  - Learning clauses:
+    - Resolve $C_3$ and $C_7$ on $e$, we learned $R_4 = (a + ¬b + c + not d)$.
+    - Resolve $C_6$ and $R_4$ on $d$, we learned $R_5 = (a + ¬b + c)$.
+    - Resolve $C_1$ and $R_5$ on $b$, we learned $R_6 = (a + c)$.
+    - Resolve $C_10$ and $R_6$ on $c$, we learned $R_7 = a$.
+  - $R_7$ contains only one literal in the current decision level, so we choose $C_11 = R_7 = a$ and add it to the clause set.
+  - Then we backtrack to decision level 0. Since $C_11 = a$ is a unit clause,
+    it implies $a = 1$.
+- *SAT*:
+  #subpar.grid(
+    figure(  scale(88%, diagram_2c_3), caption: [
+      Search Tree
+    ]), <a>,
+    figure(image("assets/2c_imp3.png"), caption: [
+      Implication graph
+    ]), <b>,
+    columns: (2fr, 2fr),
+    caption: [The search tree and implication graph of SAT assignment in solving],
+    label: <full>,
+  )
+  - Therefore, we find a satisfying assignment $(a, b, c, d) = (1, 0, 0, 0)$. Hence, the CNF formula is SAT.
+
+
+
+
+
+
+
 
 #pagebreak()
 // ---------------------- Problem 3 ----------------------
