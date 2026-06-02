@@ -5,8 +5,10 @@
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 #import "@preview/wavy:0.1.3"
 #import "@preview/algorithmic:1.0.7"
+#import "@preview/zap:0.4.0"
 #show: zebraw.with(lang: true, lang-color: aqua.lighten(60%))
 #show raw.where(lang: "wavy"): it => wavy.render(it.text)
+#set scale(reflow: true)
 
 #show: project.with(
   title: "Homework 3",
@@ -282,12 +284,291 @@ The ROBDD of $"ITE"(f_c, 1, f_(not c)) = "ITE"(a, 1, b) = a + b$ is as shown as 
 #pagebreak()
 // ---------------------- Problem 2 ----------------------
 = SAT Solving
+$
+  C_1 & = (a + b + c),                & C_2 & = (a + ¬c + ¬d + e),quad & C_3 & = (¬b + c + ¬d + e), \
+  C_4 & = (a + ¬c + ¬e),              & C_5 & = (¬c + d + e),          & C_6 & = (¬b + c + d), \
+  C_7 & = (a + ¬b + c + ¬d + ¬e),quad & C_8 & = (¬a + b + c + e),      & C_9 & = (¬a + ¬c + d + ¬e). \
+$
 
+
+== // 2. (a)
+
+#let diagram_2a = diagram(
+  node-stroke: 1.5pt,
+  edge-stroke: 1.5pt,
+  spacing: 0.5cm,
+  node((-4, 0), align(center)[$a$], name: <a1>, shape: "circle"),
+  
+  node((-8, 2), align(center)[$b$], name: <b1>, shape: "circle"),
+  node((0, 2), align(center)[$b$], name: <b2>, shape: "circle"),
+  
+  node((-12, 4), align(center)[$c$], name: <c1>, shape: "circle"),
+  node((-4, 4), align(center)[$c$], name: <c2>, shape: "circle"),
+  node((1, 4), align(center)[$c$], name: <c3>, shape: "circle"),
+  
+  node((-14, 6), align(center)[$C_1$], name: <d1>, stroke: 0pt),
+  node((-10, 6), align(center)[$d$], name: <d2>, shape: "circle"),
+  node((-6, 6), align(center)[$d$], name: <d3>, shape: "circle"),
+  node((-2, 6), align(center)[$d$], name: <d4>, shape: "circle"),
+  node((1, 6), align(center)[$d$], name: <d5>, shape: "circle"),
+  
+  
+  node((-11, 9), align(center)[$e$], name: <e3>, shape: "circle"),
+  node((-9, 9), align(center)[$e$], name: <e4>, shape: "circle"),
+  node((-7, 9), align(center)[$C_6$], name: <e5>, shape: "circle", stroke: 0pt),
+  node((-5, 9), align(center)[$e$], name: <e6>, shape: "circle"),
+  node((-3, 9), align(center)[$e$], name: <e7>, shape: "circle"),
+  node((-1, 9), align(center)[$e$], name: <e8>, shape: "circle"),
+  node((1, 9), align(center)[$e$], name: <e9>, shape: "circle"),
+  
+  
+  node((-11.5, 13), align(center)[$C_5$], name: <z3>, shape: "circle", stroke: 0pt),
+  node((-10.5, 13), align(center)[$C_4$], name: <o3>, shape: "circle", stroke: 0pt),
+  node((-9.5, 13), align(center)[$C_2$], name: <z4>, shape: "circle", stroke: 0pt),
+  node((-8.5, 13), align(center)[$C_4$], name: <o4>, shape: "circle", stroke: 0pt),
+  
+  node((-5.5, 13), align(center)[$C_3$], name: <z6>, shape: "circle", stroke: 0pt),
+  node((-4.5, 13), align(center)[$C_7$], name: <o6>, shape: "circle", stroke: 0pt),
+  node((-3.5, 13), align(center)[$C_5$], name: <z7>, shape: "circle", stroke: 0pt),
+  node((-2.5, 13), align(center)[$C_4$], name: <o7>, shape: "circle", stroke: 0pt),
+  node((-1.5, 13), align(center)[$C_2$], name: <z8>, shape: "circle", stroke: 0pt),
+  node((-0.5, 13), align(center)[$C_4$], name: <o8>, shape: "circle", stroke: 0pt),
+  node((0.5, 13), align(center)[$C_8$], name: <z9>, shape: "circle", stroke: 0pt),
+  
+  node((1.5, 13), align(center)[SAT], name: <o9>, shape: "rect"),
+  
+  edge(<a1>, <b1>, "--}>"),
+  edge(<b1>, <c1>, "--}>"),
+  edge(<c1>, <d1>, "--x--}>", stroke: red),
+  edge(<c1>, <d2>, "-}>"),
+  edge(<d2>, <e3>, "--}>"),
+  edge(<e3>, <z3>, "--x--}>", stroke: red),
+  edge(<e3>, <o3>, "-x-}>", stroke: red),
+  edge(<d2>, <e4>, "-}>"),
+  edge(<e4>, <z4>, "--x--}>", stroke: red),
+  edge(<e4>, <o4>, "-x-}>", stroke: red),
+  
+  edge(<b1>, <c2>, "-}>"),
+  edge(<c2>, <d3>, "--}>"),
+  edge(<d3>, <e5>, "--x--}>", stroke: red),
+  edge(<d3>, <e6>, "-}>"),
+  edge(<e6>, <z6>, "--x--}>", stroke: red),
+  edge(<e6>, <o6>, "-x-}>", stroke: red),
+  edge(<c2>, <d4>, "-}>"),
+  edge(<d4>, <e7>, "--}>"),
+  edge(<e7>, <z7>, "--x--}>", stroke: red),
+  edge(<e7>, <o7>, "-x-}>", stroke: red),
+  edge(<d4>, <e8>, "-}>"),
+  edge(<e8>, <z8>, "--x--}>", stroke: red),
+  edge(<e8>, <o8>, "-x-}>", stroke: red),
+  
+  edge(<a1>, <b2>, "-}>"),
+  edge(<b2>, <c3>, "--}>"),
+  edge(<c3>, <d5>, "--}>"),
+  edge(<d5>, <e9>, "--}>"),
+  edge(<e9>, <z9>, "--x--}>", stroke: red),
+  edge(<e9>, <o9>, "-}>"),
+)
+
+#figure(
+  scale(88%, diagram_2a),
+  caption: [The search tree in solving the above CNF formula without implication and conflict-based learning.],
+)
+
+== // 2. (b)
+Graphical tree are hard to show both the search process and implication, hence we use the following text-based tree to show the search process and implication in solving the above CNF formula without implication and conflict-based learning. In the tree, each node represents a variable assignment, and each edge represents an implication. The leaf nodes with "✓ SAT" represent a satisfying assignment, and the leaf nodes with "✗ conflict at $C_x$" represent a conflict at clause $C_x$.
+
+```
+root
+├── a=0
+│   ├── b=0  => c=1(C1), e=0(C4), d=0(C2)  ✗ conflict at C5
+│   └── b=1
+│       ├── c=0  => d=1(C6), e=1(C3)  ✗ conflict at C7
+│       └── c=1  => e=0(C4), d=0(C2)  ✗ conflict at C5
+└── a=1
+    └── b=0
+        └── c=0  => e=1(C8)
+            ├── d=0  ✓ SAT
+            └── d=1  ✓ SAT
+```
+
+== // 2. (c)
+The search tree in solving the above CNF formula with implication and conflict-based learning is shown as below.
 
 #pagebreak()
 // ---------------------- Problem 3 ----------------------
 = Combinational Equivalence Checking
+== // 3. (a)
 
+#figure(
+  image("images/3a.png", width: 80%),
+  caption: [The corresponding miter circuit for equivalence checking.],
+)<3a_miter>
+
+== // 3. (b)
+Since we have 3 primary inputs, the total possible input combinations are $2^3 = 8$. So we only need one iteration of 8-bit parallelsimulation to achieve exhaustive simulation on
+the miter circuit of @3a_miter.
+
+$
+  a &= 10101010 quad("0xAA"); \
+  b &= 11001100 quad("0xCC"); \
+  c &= 11110000 quad("0xF0"); \
+$$
+  d &= a and b &=& 10101010 space amp space 11001100 = 10001000 quad("0x88"); \
+  e &= b and not c &=& 11001100 space amp space 00001111 = 00001100 quad("0x0C"); \
+  f &= c and a &=& 11110000 space amp space 10101010 = 10100000 quad("0xA0"); \
+  g &= d or e or f &=& 10001000  |  00001100  |  10100000 = 10101100 quad("0xAC"); \
+  \
+  h &= a and c &=& 11110000 space amp space 10101010 = 10100000 quad("0xA0"); \
+  i &= b and not c &=& 11001100 space amp space 00001111 = 00001100 quad("0x0C"); \
+  j &= h or j &=& 10100000  |  00001100 = 10101100 quad("0xAC"); \
+  \
+  "Final Output" &= g xor j &=& 10101100 space amp space 10101100 = 00000000 quad("0x00"). \
+$
+
+Since the final output is always 0, we can conclude that the two circuits are combinationally equivalent.
+
+== // 3. (c)
+The miter output is z. To formulate the equivalence checking problem as a SAT
+instance, we force the miter output to be 1. Therefore, the SAT instance is the
+CNF formula Phi and z, where Phi encodes all gates in the miter circuit.
+
+From the circuit, the gate relations are
+
+$
+d = a and b \
+e = b and not c \
+f = a and c \
+g = d or e or f \
+h = a and c \
+i = b and not c \
+j = h or i \
+z = g xor j
+$
+
+Each gate is translated into CNF as follows.
+
+$
+d = a and b
+quad => quad
+(not d or a)
+and (not d or b)
+and (not a or not b or d)
+$
+
+$
+e = b and not c
+quad => quad
+(not e or b)
+and (not e or not c)
+and (not b or c or e)
+$
+
+$
+f = a and c
+quad => quad
+(not f or a)
+and (not f or c)
+and (not a or not c or f)
+$
+
+$
+g = d or e or f
+quad => quad
+(not d or g)
+and (not e or g)
+and (not f or g)
+and (not g or d or e or f)
+$
+
+$
+h = a and c
+quad => quad
+(not h or a)
+and (not h or c)
+and (not a or not c or h)
+$
+
+$
+i = b and not c
+quad => quad
+(not i or b)
+and (not i or not c)
+and (not b or c or i)
+$
+
+$
+j = h or i
+quad => quad
+(not h or j)
+and (not i or j)
+and (not j or h or i)
+$
+
+$
+z = g xor j
+quad => quad
+(g or j or not z)
+and (g or not j or z)
+and (not g or j or z)
+and (not g or not j or not z)
+$
+
+Therefore, the final SAT instance is
+
+$
+Phi
+&=
+(not d or a)
+and (not d or b)
+and (not a or not b or d) \
+
+&quad and
+(not e or b)
+and (not e or not c)
+and (not b or c or e) \
+
+&quad and
+(not f or a)
+and (not f or c)
+and (not a or not c or f) \
+
+&quad and
+(not d or g)
+and (not e or g)
+and (not f or g)
+and (not g or d or e or f) \
+
+&quad and
+(not h or a)
+and (not h or c)
+and (not a or not c or h) \
+
+&quad and
+(not i or b)
+and (not i or not c)
+and (not b or c or i) \
+
+&quad and
+(not h or j)
+and (not i or j)
+and (not j or h or i) \
+
+&quad and
+(g or j or not z)
+and (g or not j or z)
+and (not g or j or z)
+and (not g or not j or not z) \
+
+&quad and
+z
+$
+
+The last clause z forces the miter output to be 1. Thus, the SAT solver searches
+for an assignment such that the two circuit outputs are different. If this CNF
+formula is satisfiable, then the satisfying assignment is a counterexample to
+equivalence. If this CNF formula is unsatisfiable, then no such counterexample
+exists, and the two circuits are equivalent.
 
 #pagebreak()
 // ---------------------- Problem 4 ----------------------
@@ -299,7 +580,7 @@ The set of states each of which has no direct transition to itself has character
 == // 4. (b)
 The set of states that can be reached from C in exactly two transitions has characteristic function of
 $
-  G(bold(s')) = exists bold(s), bold(s_1). C(bold(s)) and T(bold(s), bold(s_1)) and T(bold(s_1), bold(s')) \
+  G(bold(s)) = exists bold(s_1), bold(s_2). C(bold(s_1)) and T(bold(s_1), bold(s_2)) and T(bold(s_2), bold(s)) \
 $
 
 == // 4. (c)
