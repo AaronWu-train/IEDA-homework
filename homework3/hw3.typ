@@ -251,7 +251,7 @@ since $v_2 = d$ and $v_5 = ¬d$, we have
 $
   & "ITE"(v_2, 1, 1) = 1 \
   & "ITE"(v_5, 1, v_2) = "ITE"(¬d, 1, d) = 1 \
-  & "ITE"(0, 1, 0) = "ITE"(d, 1, 0) = 0. \
+  & "ITE"(0, 1, 0) = 0. \
 $
 Therefore,
 $
@@ -464,7 +464,8 @@ The search tree in solving the above CNF formula with implication and conflict-b
     - Resolve $C_2$ and $C_5$ on $d$, we learned $R_1 = (a + ¬c + e)$.
     - Resolve $C_4$ and $R_1$ on $e$, we learned $R_2 = (a + ¬c)$.
     - Resolve $C_1$ and $R_2$ on $c$, we learned $R_3 = (a + b)$.
-  - $R_2$ is the 1-UIP clause, so we add $C_10 = R_2 = (a + ¬c)$ to the clause set, and backtrack to the decision level of 1.
+  - The possible learned clause candidates are R1, R2, and R3. We choose R2 because it contains only one literal at the current decision level.
+  - We add $C_10 = R_2 = (a + ¬c)$ to the clause set, and backtrack to the decision level of 1.
 - *Second conflict*:
   #subpar.grid(
     figure(  scale(88%, diagram_2c_2), caption: [
@@ -482,8 +483,8 @@ The search tree in solving the above CNF formula with implication and conflict-b
     - Resolve $C_6$ and $R_4$ on $d$, we learned $R_5 = (a + ¬b + c)$.
     - Resolve $C_1$ and $R_5$ on $b$, we learned $R_6 = (a + c)$.
     - Resolve $C_10$ and $R_6$ on $c$, we learned $R_7 = a$.
-  - $R_7$ contains only one literal in the current decision level, so we choose $C_11 = R_7 = a$ and add it to the clause set.
-  - Then we backtrack to decision level 0. Since $C_11 = a$ is a unit clause,
+  - The possible learned clause candidates are R4, R5, R6, and R7. We choose R7 because it contains only one literal at the current decision level.
+  - We add $C_11 = R_7 = a$ to the clause set, and backtrack to decision level 0. Since $C_11 = a$ is a unit clause,
     it implies $a = 1$.
 - *SAT*:
   #subpar.grid(
@@ -497,8 +498,7 @@ The search tree in solving the above CNF formula with implication and conflict-b
     caption: [The search tree and implication graph of SAT assignment in solving],
     label: <full>,
   )
-  - Therefore, we find a satisfying assignment $(a, b, c, d) = (1, 0, 0, 0)$. Hence, the CNF formula is SAT.
-
+  - Therefore, we find a satisfying assignment $(a, b, c, d, e)$ = (1, 0, 0, 0, 1). Hence, the CNF formula is SAT.
 
 
 
@@ -534,7 +534,7 @@ $$
   i &= b and not c &=& 11001100 space amp space 00001111 = 00001100 quad("0x0C"); \
   j &= h or j &=& 10100000  |  00001100 = 10101100 quad("0xAC"); \
   \
-  "Final Output" &= g xor j &=& 10101100 space amp space 10101100 = 00000000 quad("0x00"). \
+  "Final Output" &= g xor j &=& 10101100  xor  10101100 = 00000000 quad("0x00"). \
 $
 
 Since the final output is always 0, we can conclude that the two circuits are combinationally equivalent.
@@ -704,6 +704,30 @@ The result of running `minisat` on the above CNF file is `UNSAT`, which means th
   caption: [The result of running `minisat` on the above CNF file.],
 )
 
+== // 3. (e)
+
+I write the two circuits in Figure 1 into BLIF format as follows.
+
+The BLIF file of the first circuit is:
+#text(size: 9pt, 
+zebraw(
+  numbering: false,
+  raw(read("assets/c1.blif"), block: true),
+))
+
+The BLIF file of the second circuit is:
+#text(size: 9pt, 
+zebraw(
+  numbering: false,
+  raw(read("assets/c2.blif"), block: true),
+))
+
+Then I run ABC with `abc -c "cec c1.blif c2.blif"`, and the result is `c1.blif and c2.blif are equivalent.` Therefore, the two circuits are combinationally equivalent.
+
+#figure(
+  image("assets/3e.png", width: 70%),
+  caption: [The result of running ABC for combinational equivalence checking.],
+)
 
 #pagebreak()
 // ---------------------- Problem 4 ----------------------

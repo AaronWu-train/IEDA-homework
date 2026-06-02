@@ -1,0 +1,19 @@
+# C2: j = (a & c) | (b & ~c)
+.model c2
+.inputs a b c
+.outputs z
+
+# h = a & c
+.names a c h
+11 1
+
+# i = b & ~c
+.names b c i
+10 1
+
+# z = h | i
+.names h i z
+1- 1
+-1 1
+
+.end

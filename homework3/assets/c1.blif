@@ -1,0 +1,24 @@
+# C1: g = (a & b) | (b & ~c) | (a & c)
+.model c1
+.inputs a b c
+.outputs z
+
+# d = a & b
+.names a b d
+11 1
+
+# e = b & ~c
+.names b c e
+10 1
+
+# f = a & c
+.names a c f
+11 1
+
+# z = d | e | f
+.names d e f z
+1-- 1
+-1- 1
+--1 1
+
+.end
