@@ -650,4 +650,241 @@ $
 I_2(s_2, s_3, s_4) = s_2 and not s_3 and not s_4
 $
 
+== // 5. (b)
 
+Transition functions of product machine $C_(1 times 2)$:
+
+$
+s'_1 = (x_1 and x_2) or s_1
+$
+
+$
+s'_2 = x_1
+$
+
+$
+s'_3 = x_2
+$
+
+$
+s'_4 = (s_2 and s_3) or s_4
+$
+
+Output functions of product machine $C_(1 times 2)$:
+
+$
+z_1 = s_1
+$
+
+$
+z_2 = (s_2 and s_3) or s_4
+$
+
+$
+z = z_1 xor z_2
+  = s_1 xor ((s_2 and s_3) or s_4)
+$
+
+Since the initial values are $r_1 = 0, r_2 = 1, r_3 = 0, r_4 = 0$, the initial state of $C_(1 times 2)$ is
+
+$
+(s_1, s_2, s_3, s_4) = (0, 1, 0, 0)
+$
+
+Its characteristic function is
+
+$
+I_(1 times 2)(s_1, s_2, s_3, s_4)
+= not s_1 and s_2 and not s_3 and not s_4
+$
+
+== // 5(c)
+
+Transition relation of $C_(1 times 2)$ is
+
+$
+T(bold(x), bold(s), bold(s')) &= product_i (s_i' equiv delta_i(arrow(x), arrow(s))) \
+&=
+(s'_1 equiv (s_1 or (x_1 and x_2)))
+and (s'_2 equiv x_1)
+and (s'_3 equiv x_2)
+and (s'_4 equiv ((s_2 and s_3) or s_4)),
+$
+
+Quantified Transition Relation:
+$
+T_exists (bold(s), bold(s')) &= exists bold(x) . T(bold(x), bold(s), bold(s')) \
+&= exists x_1 exists x_2 . (s'_1 equiv (s_1 or (x_1 and x_2)))
+and (s'_2 equiv x_1)
+and (s'_3 equiv x_2)
+and (s'_4 equiv ((s_2 and s_3) or s_4))
+$
+
+Since
+
+$
+exists x . ((x equiv a) and F(x)) equiv F(a),
+$
+
+we can eliminate $x_1$ and $x_2$ as follows:
+
+$
+T_exists(s, s')
+= exists x_1 exists x_2 .
+(
+  (s'_1 equiv (s_1 or (x_1 and x_2)))
+  and (s'_2 equiv x_1)
+  and (s'_3 equiv x_2)
+  and (s'_4 equiv ((s_2 and s_3) or s_4))
+)
+$
+
+First eliminate $x_1$:
+
+$
+= exists x_2 .
+(
+  (s'_1 equiv (s_1 or (s'_2 and x_2)))
+  and (s'_3 equiv x_2)
+  and (s'_4 equiv ((s_2 and s_3) or s_4))
+)
+$
+
+Then eliminate $x_2$:
+
+$
+=
+(s'_1 equiv (s_1 or (s'_2 and s'_3)))
+and
+(s'_4 equiv ((s_2 and s_3) or s_4))
+$
+
+Hence, the quantified transition relation is
+$
+T_exists (s, s') =
+(s'_1 equiv (s_1 or (s'_2 and s'_3)))
+and
+(s'_4 equiv ((s_2 and s_3) or s_4))
+$
+== // 5(d)
+
+The initial state is
+
+$
+(s_1, s_2, s_3, s_4) = (0, 1, 0, 0)
+$
+
+Thus the initial-state characteristic function is
+
+$
+R_0 = not s_1 and s_2 and not s_3 and not s_4
+$
+
+Using $T_exists$, the reached state sets are:
+
+$
+R_1 =
+not s_4 and (s_1 equiv (s_2 and s_3))
+$
+
+$
+R_2 =
+s_1 equiv ((s_2 and s_3) or s_4)
+$
+
+$
+R_3 = R_2 = s_1 equiv ((s_2 and s_3) or s_4)
+$
+
+Therefore, the fixed point is reached at iteration 2.
+
+
+Since all reachable states satisfy
+
+$
+s_1 equiv ((s_2 and s_3) or s_4)
+$
+
+The output functions are
+
+$
+z_1 = s_1
+$
+
+and
+
+$
+z_2 = (s_2 and s_3) or s_4
+$
+
+Thus, for all reachable states,
+
+$
+z_1 equiv z_2
+$
+
+Therefore, $C_1$ and $C_2$ are equivalent under the given initial state.
+
+
+== // 5(e)
+
+Now the initial state is
+
+$
+(s_1, s_2, s_3, s_4) = (0, 1, 1, 0)
+$
+
+The initial-state characteristic function is
+
+$
+R_0 =
+not s_1 and s_2 and s_3 and not s_4
+$
+
+Using $T_exists$, the reached state sets are:
+
+$
+R_1 &=
+R_0
+or
+(s_4 and (s_1 equiv (s_2 and s_3)))\
+&=
+(not s_1 and s_2 and s_3 and not s_4)
+or
+(s_4 and (s_1 equiv (s_2 and s_3)))\
+
+R_2 &=
+(not s_1 and s_2 and s_3 and not s_4)
+or
+(s_4 and (s_1 equiv (s_1 or (s_2 and s_3))))
+\
+R_3 &= R_2
+$
+
+Therefore, the fixed point is reached at iteration 2.
+
+However, the initial state itself is reachable. At
+
+$
+(s_1, s_2, s_3, s_4) = (0, 1, 1, 0)
+$
+
+we have
+
+$
+z_1 = s_1 = 0
+$
+
+but
+
+$
+z_2 = (s_2 and s_3) or s_4 = 1
+$
+
+Thus,
+
+$
+z_1 != z_2
+$
+
+Therefore, $C_1$ and $C_2$ are not equivalent under the new initial state.
