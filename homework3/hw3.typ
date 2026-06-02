@@ -401,7 +401,7 @@ The search tree in solving the above CNF formula with implication and conflict-b
 == // 3. (a)
 
 #figure(
-  image("images/3a.png", width: 80%),
+  image("assets/3a.png", width: 80%),
   caption: [The corresponding miter circuit for equivalence checking.],
 )<3a_miter>
 
@@ -570,6 +570,30 @@ formula is satisfiable, then the satisfying assignment is a counterexample to
 equivalence. If this CNF formula is unsatisfiable, then no such counterexample
 exists, and the two circuits are equivalent.
 
+
+== // 3. (d)
+I translate the above CNF formula into DIMACS format as follows. note that we use the following variable mapping:
+$a = 1, b = 2, c = 3, d = 4, e = 5, f = 6, g = 7, h = 8, i = 9, j = 10, z = 11$.
+
+#let cnf = read("assets/miter_equivalence.cnf")
+
+#text(size: 11pt, 
+zebraw(
+  numbering: false,
+  highlight-lines: (
+    (header: [DIMACS format for the miter equivalence checking problem], lines: 1),
+  ),
+  raw(cnf, block: true),
+))
+
+The result of running `minisat` on the above CNF file is `UNSAT`, which means that the two circuits are combinationally equivalent.
+
+#figure(
+  image("assets/3d.png", width: 70%),
+  caption: [The result of running `minisat` on the above CNF file.],
+)
+
+
 #pagebreak()
 // ---------------------- Problem 4 ----------------------
 = Characteristic Function
@@ -591,8 +615,39 @@ $
   )
 $
 
-
-
-#pagebreak()
 // ---------------------- Problem 5 ----------------------
 = Sequential Equivalence Checking
+
+== // 5. (a)
+Transition function of $C_1$:
+  $
+    s_1' = not((not (x_1 and x_2)) and (not s_1)) = (x_1 and x_2) or s_1 
+  $
+Output function of $C_1$:
+  $
+    z_1 = s_1 
+  $
+Transition functions of $C_2$:
+$
+  s_2' &= x_1 \
+  s_3' &= x_2 \
+  s_4' &= (s_2 and s_3) or s_4 \
+$
+Output function of $C_2$:
+$
+  z_2 = (s_2 and s_3) or s_4 
+$
+Since a characteristic function is 1 exactly on the corresponding initial state, and the initial values are
+$r_1 = 0, r_2 = 1, r_3 = 0, r_4 = 0$, we have:
+
+Characteristic function of the initial state of $C_1$:
+$
+I_1(s_1) = not s_1
+$
+
+Characteristic function of the initial state of $C_2$:
+$
+I_2(s_2, s_3, s_4) = s_2 and not s_3 and not s_4
+$
+
+
