@@ -864,7 +864,7 @@ $
 we can eliminate $x_1$ and $x_2$ as follows:
 
 $
-T_exists(s, s')
+T_exists (bold(s), bold(s'))
 = exists x_1 exists x_2 .
 (
   (s'_1 equiv (s_1 or (x_1 and x_2)))
@@ -896,7 +896,7 @@ $
 
 Hence, the quantified transition relation is
 $
-T_exists (s, s') =
+T_exists (bold(s), bold(s')) =
 (s'_1 equiv (s_1 or (s'_2 and s'_3)))
 and
 (s'_4 equiv ((s_2 and s_3) or s_4))
