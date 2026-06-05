@@ -464,7 +464,7 @@ The search tree in solving the above CNF formula with implication and conflict-b
     - Resolve $C_2$ and $C_5$ on $d$, we learned $R_1 = (a + ¬c + e)$.
     - Resolve $C_4$ and $R_1$ on $e$, we learned $R_2 = (a + ¬c)$.
     - Resolve $C_1$ and $R_2$ on $c$, we learned $R_3 = (a + b)$.
-  - The possible learned clause candidates are R1, R2, and R3. We choose R2 because it contains only one literal at the current decision level.
+  - The possible learned clause candidates are $R_1$, $R_2$, and $R_3$. We choose $R_2$ because it contains only one literal at the current decision level.
   - We add $C_10 = R_2 = (a + ¬c)$ to the clause set, and backtrack to the decision level of 1.
 - *Second conflict*:
   #subpar.grid(
@@ -483,7 +483,7 @@ The search tree in solving the above CNF formula with implication and conflict-b
     - Resolve $C_6$ and $R_4$ on $d$, we learned $R_5 = (a + ¬b + c)$.
     - Resolve $C_1$ and $R_5$ on $b$, we learned $R_6 = (a + c)$.
     - Resolve $C_10$ and $R_6$ on $c$, we learned $R_7 = a$.
-  - The possible learned clause candidates are R4, R5, R6, and R7. We choose R7 because it contains only one literal at the current decision level.
+  - The possible learned clause candidates are $R_4$, $R_5$, $R_6$, and $R_7$. We choose $R_7$ because it contains only one literal at the current decision level.
   - We add $C_11 = R_7 = a$ to the clause set, and backtrack to decision level 0. Since $C_11 = a$ is a unit clause,
     it implies $a = 1$.
 - *SAT*:
