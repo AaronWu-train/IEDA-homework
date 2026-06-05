@@ -525,10 +525,83 @@ $
 $
 which is a valid Polish expression and is normalized since it does not contain consecutive operators of the same type. Also, the normalized Polish expression is canonical in representing the floorplan.
 
-== // 2.(c)
+== // 2. (c)
 
-== // 2.(d)
+For each module, rotation is allowed, so each leaf has two possible shapes. For an internal vertex, the child shape sets are combined by Cartesian product. If the operator is $V$, then $(w,h)=(w_l+w_r, max(h_l,h_r))$; if the operator is $H$, then $(w,h)=(max(w_l,w_r), h_l+h_r)$. After each combination, dominated shapes are removed. A shape $(w,h)$ is dominated if there exists another shape $(w',h')$ with $w' <= w$ and $h' <= h$, and at least one inequality is strict.
 
+For example, for $23V$, we have $S_2={(3,1),(1,3)}$ and $S_3={(4,3),(3,4)}$. Thus,
+$
+S_(23V) &= "prune"({(3+4,max(1,3)), (3+3,max(1,4)), (1+4,max(3,3)), (1+3,max(3,4))}) \
+&= "prune"({(7,3),(6,4),(5,3),(4,4)})\
+&= {(5,3),(4,4)}.
+$
+Here $(7,3)$ is dominated by $(5,3)$, and $(6,4)$ is dominated by $(4,4)$.
+
+The full bottom-up computation is:
+
+#table(
+  columns: (1.5fr, 2.3fr, 2fr),
+  align: left,
+  [vertex], [candidate shapes before pruning], [non-dominated shape set],
+  [$23V$], [${(7,3),(6,4),(5,3),(4,4)}$], [${(5,3),(4,4)}$],
+  [$123V H$], [${(5,5),(7,6),(5,9),(4,10),$$ (5,8),(7,7),(5,12),(4,13)}$], [${(5,5),(4,9)}$],
+  [$123V H 4 H$], [${(5,7),(4,11),(5,7),(4,11)}$], [${(5,7),(4,11)}$],
+  [$56V$], [${(9,7),(8,7),(12,4),(11,5)}$], [${(8,7),(11,5),(12,4)}$],
+  [$123V H 4 H 5 6 V V$], [${(13,7),(16,7),(17,7),(12,11), $$ (15,11),(16,11)}$], [${(13,7),(12,11)}$],
+  [$78H$], [${(6,7),(4,9),(7,7),(6,6), $ $ (3,10),(6,9)}$], [${(6,6),(4,9),(3,10)}$],
+  [$E$], [${(13,13),(13,16),(13,17),(12,17),$$ (12,20),(12,21)}$], [${(13,13),(12,17)}$],
+)
+
+At the root, the two non-dominated shapes have areas $13 dot 13 = 169$ and $12 dot 17 = 204$. Therefore, the smallest bounding box is $13 times 13$.
+
+Tracing back from the global optimum $(13,13)$, one compatible set of choices is:
+#let sized-node(lbl, shp) = [
+  #align(center)[
+    #stack(
+      dir: ttb,
+      spacing: 2pt,
+      lbl,
+      text(size: 9pt, shp),
+    )
+  ]
+]
+
+#figure(
+  tidy-tree-graph(
+    spacing: (20pt, 20pt),
+    node-inset: 4pt,
+  )[
+    - #sized-node([H], [$(13,13)$])
+      - #sized-node([V], [$(13,7)$])
+        - #sized-node([H], [$(5,7)$])
+          - #sized-node([H], [$(5,5)$])
+            - #sized-node([1], [$(5,2)$])
+            - #sized-node([V], [$(5,3)$])
+              - #sized-node([2], [$(1,3)$])
+              - #sized-node([3], [$(4,3)$])
+          - #sized-node([4], [$(2,2)$])
+        - #sized-node([V], [$(8,7)$])
+          - #sized-node([5], [$(4,7)$])
+          - #sized-node([6], [$(4,5)$])
+      - #sized-node([H], [$(6,6)$])
+        - #sized-node([7], [$(4,3)$])
+        - #sized-node([8], [$(6,3)$])
+  ],
+  caption: [The slicing tree with the chosen shape at each vertex in the final optimum solution.],
+) <2c_tree>
+
+Hence, one final optimum floorplan has bounding box $13 times 13$.
+
+#figure(
+  image("assets/layout.png", width: 50%),
+  caption: [The final optimum floorplan with bounding box $13 times 13$.],
+)
+
+== // 2. (d)
+
+No. If two Polish expressions represent the same slicing floorplan, then they have the same set of feasible shapes and hence the same smallest bounding box.
+
+The reason is that different expressions may only differ by equivalent rearrangements, such as swapping the two children of a cut or regrouping consecutive cuts of the same type. These transformations do not change the possible shape set, because the $V$-cut rule $(w,h)=(w_l+w_r,max(h_l,h_r))$ and the $H$-cut rule $(w,h)=(max(w_l,w_r),h_l+h_r)$ are unaffected by such equivalent reorderings. Therefore, different answers can occur only when the two expressions actually represent different slicing structures, not the same floorplan.
 #pagebreak()
 // ---------------------- Problem 3 ----------------------
 = Wire-length Estimation
@@ -768,10 +841,10 @@ Hence, the shortest path length from $S$ to $U$ is $14$.
 == // 5. (b)
 
 #subpar.grid(
-  figure(image("assets/5b1.png"), caption: [
+  figure(image("assets/5b1.png", width: 80%), caption: [
     Way 1
   ]), <5b1>,
-  figure(image("assets/5b2.png"), caption: [
+  figure(image("assets/5b2.png",width: 80%), caption: [
     Way 2
   ]), <5b2>,
   columns: (1fr, 1fr),
