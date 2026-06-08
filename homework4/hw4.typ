@@ -527,13 +527,13 @@ which is a valid Polish expression and is normalized since it does not contain c
 
 == // 2. (c)
 
-For each module, rotation is allowed, so each leaf has two possible shapes. For an internal vertex, the child shape sets are combined by Cartesian product. If the operator is $V$, then $(w,h)=(w_l+w_r, max(h_l,h_r))$; if the operator is $H$, then $(w,h)=(max(w_l,w_r), h_l+h_r)$. After each combination, dominated shapes are removed. A shape $(w,h)$ is dominated if there exists another shape $(w',h')$ with $w' <= w$ and $h' <= h$, and at least one inequality is strict.
+For each module, rotation is allowed, so each leaf has two possible shapes. For an internal vertex, the child shape sets are combined by Cartesian product. If the operator is $V$, then $(w,h)=(w_l+w_r, max(h_l, h_r))$; if the operator is $H$, then $(w,h)=(max(w_l, w_r), h_l+h_r)$. After each combination, dominated shapes are removed. A shape $(w,h)$ is dominated if there exists another shape $(w',h')$ with $w' <= w$ and $h' <= h$, and at least one inequality is strict.
 
 For example, for $23V$, we have $S_2={(3,1),(1,3)}$ and $S_3={(4,3),(3,4)}$. Thus,
 $
-S_(23V) &= "prune"({(3+4,max(1,3)), (3+3,max(1,4)), (1+4,max(3,3)), (1+3,max(3,4))}) \
-&= "prune"({(7,3),(6,4),(5,3),(4,4)})\
-&= {(5,3),(4,4)}.
+  S_(23V) &= "prune"({(3+4,max(1, 3)), (3+3,max(1, 4)), (1+4,max(3, 3)), (1+3,max(3, 4))}) \
+  &= "prune"({(7,3),(6,4),(5,3),(4,4)})\
+  &= {(5,3),(4,4)}.
 $
 Here $(7,3)$ is dominated by $(5,3)$, and $(6,4)$ is dominated by $(4,4)$.
 
@@ -544,12 +544,23 @@ The full bottom-up computation is:
   align: left,
   [vertex], [candidate shapes before pruning], [non-dominated shape set],
   [$23V$], [${(7,3),(6,4),(5,3),(4,4)}$], [${(5,3),(4,4)}$],
-  [$123V H$], [${(5,5),(7,6),(5,9),(4,10),$$ (5,8),(7,7),(5,12),(4,13)}$], [${(5,5),(4,9)}$],
+  [$123V H$],
+  [${(5,5),(7,6),(5,9),(4,10),$$(5,8),(7,7),(5,12),(4,13)}$],
+  [${(5,5),(4,9)}$],
+
   [$123V H 4 H$], [${(5,7),(4,11),(5,7),(4,11)}$], [${(5,7),(4,11)}$],
   [$56V$], [${(9,7),(8,7),(12,4),(11,5)}$], [${(8,7),(11,5),(12,4)}$],
-  [$123V H 4 H 5 6 V V$], [${(13,7),(16,7),(17,7),(12,11), $$ (15,11),(16,11)}$], [${(13,7),(12,11)}$],
-  [$78H$], [${(6,7),(4,9),(7,7),(6,6), $ $ (3,10),(6,9)}$], [${(6,6),(4,9),(3,10)}$],
-  [$E$], [${(13,13),(13,16),(13,17),(12,17),$$ (12,20),(12,21)}$], [${(13,13),(12,17)}$],
+  [$123V H 4 H 5 6 V V$],
+  [${(13,7),(16,7),(17,7),(12,11),$$(15,11),(16,11)}$],
+  [${(13,7),(12,11)}$],
+
+  [$78H$],
+  [${(6,7),(4,9),(7,7),(6,6),$ $(3,10),(6,9)}$],
+  [${(6,6),(4,9),(3,10)}$],
+
+  [$E$],
+  [${(13,13),(13,16),(13,17),(12,17),$$(12,20),(12,21)}$],
+  [${(13,13),(12,17)}$],
 )
 
 At the root, the two non-dominated shapes have areas $13 dot 13 = 169$ and $12 dot 17 = 204$. Therefore, the smallest bounding box is $13 times 13$.
@@ -601,7 +612,7 @@ Hence, one final optimum floorplan has bounding box $13 times 13$.
 
 No. If two Polish expressions represent the same slicing floorplan, then they have the same set of feasible shapes and hence the same smallest bounding box.
 
-The reason is that different expressions may only differ by equivalent rearrangements, such as swapping the two children of a cut or regrouping consecutive cuts of the same type. These transformations do not change the possible shape set, because the $V$-cut rule $(w,h)=(w_l+w_r,max(h_l,h_r))$ and the $H$-cut rule $(w,h)=(max(w_l,w_r),h_l+h_r)$ are unaffected by such equivalent reorderings. Therefore, different answers can occur only when the two expressions actually represent different slicing structures, not the same floorplan.
+The reason is that different expressions may only differ by equivalent rearrangements, such as swapping the two children of a cut or regrouping consecutive cuts of the same type. These transformations do not change the possible shape set, because the $V$-cut rule $(w,h)=(w_l+w_r,max(h_l, h_r))$ and the $H$-cut rule $(w,h)=(max(w_l, w_r),h_l+h_r)$ are unaffected by such equivalent reorderings. Therefore, different answers can occur only when the two expressions actually represent different slicing structures, not the same floorplan.
 #pagebreak()
 // ---------------------- Problem 3 ----------------------
 = Wire-length Estimation
@@ -792,8 +803,8 @@ The length of the minimum Steiner tree is $2 + 4 + 4 = 10$.
 == // 4. (a)
 
 $
-    sum_(i in {B, C, D, E, F}) w_(A, i) (x_A - x_i) = 0 \
-    sum_(i in {B, C, D, E, F}) w_(A, i) (y_A - y_i) = 0
+  sum_(i in {B, C, D, E, F}) w_(A, i) (x_A - x_i) = 0 \
+  sum_(i in {B, C, D, E, F}) w_(A, i) (y_A - y_i) = 0
 $
 $
   1(x_A - 0) + 3(x_A - 2) + 1(x_A - 6) + 2(x_A - 8) + 3(x_A - 5) = 0 \
@@ -808,14 +819,13 @@ Round $(x_A, y_A)$ to the nearest integer grid point, we get the location of $A$
 == // 4. (b)
 The objective function that we want to minimize is the total wire length:
 $
-  L &= sum_(i in {B, C, D, E, F}) w_(A, i) (abs(x_A - x_i) +abs(y_A - y_i)) \ 
+  L &= sum_(i in {B, C, D, E, F}) w_(A, i) (abs(x_A - x_i) +abs(y_A - y_i)) \
   &=
   1(abs(x_A - 0) + abs(y_A - 0)) + 3(abs(x_A - 2) + abs(y_A - 5)) + 1(abs(x_A - 6) + abs(y_A - 9)) \ &+ 2(abs(x_A - 8) + abs(y_A - 1)) + 3(abs(x_A - 5) + abs(y_A - 4))
 $
 By using the following python script to enumerate all possible locations of $A$ on the grid that does not overlap with existing points and calculate the corresponding total wire length, we can find the optimal location of $A$ that minimizes the total wire length.
 
-#text(size: 10pt, 
-zebraw(
+#text(size: 10pt, zebraw(
   lang: "python",
   raw(read("assets/4b.py"), block: true),
 ))
@@ -843,10 +853,14 @@ Hence, the shortest path length from $S$ to $U$ is $14$.
 #subpar.grid(
   figure(image("assets/5b1.png", width: 80%), caption: [
     Way 1
-  ]), <5b1>,
-  figure(image("assets/5b2.png",width: 80%), caption: [
+  ]),
+  <5b1>,
+
+  figure(image("assets/5b2.png", width: 80%), caption: [
     Way 2
-  ]), <5b2>,
+  ]),
+  <5b2>,
+
   columns: (1fr, 1fr),
   caption: [Find a shortest path between S and T by Akers's approach],
   label: <5b>,
@@ -878,7 +892,7 @@ backward move goes closer to $T$, the detour number should decrease by 1.
 In @5c, the retraced path from $T$ first goes to the adjacent grid labeled 3 on its left.
 Then it follows the sequence of detour numbers
 $
-3, 3, 3, 3, 3, 2, 1, 1, 1
+  3, 3, 3, 3, 3, 2, 1, 1, 1
 $
 and finally reaches $U$.
 
@@ -911,15 +925,250 @@ From $P$ to $U$, the path length is $3 + 1 = 4$.
 From $P$ to $T$, the path length is $1 + 2 + 2 + 1 = 6$.
 
 Therefore, the total net length is
-$
-12 + 4 + 6 = 22
-$.
+$ 12 + 4 + 6 = 22 $.
 
 
 #pagebreak()
 // ---------------------- Problem 6 ----------------------
 = Channel Routing
 
+== // 6. (a)
+#figure(
+  image("assets/6a1.png", width: 60%),
+  caption: [The Horizontal intervals],
+)
+
+
+
+
+
+
+
+#subpar.grid(
+  figure(
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: 0.7cm,
+    node((0, 0), align(center)[$1$], name: <a1>, shape: "circle"),
+    node((-1, -1), align(center)[$2$], name: <a2>, shape: "circle"),
+    node((-1, 1), align(center)[$3$], name: <a3>, shape: "circle"),
+    node((2, 1), align(center)[$4$], name: <a4>, shape: "circle"),
+    node((1, 2), align(center)[$5$], name: <a5>, shape: "circle"),
+    node((0, 2), align(center)[$6$], name: <a6>, shape: "circle"),
+    node((1, -1), align(center)[$7$], name: <a7>, shape: "circle"),
+
+    edge(<a1>, <a2>),
+    edge(<a1>, <a3>),
+    edge(<a1>, <a4>),
+    edge(<a1>, <a7>),
+    edge(<a2>, <a3>),
+    edge(<a3>, <a4>),
+    edge(<a3>, <a6>),
+    edge(<a3>, <a7>, bend: 30deg),
+    edge(<a4>, <a5>),
+    edge(<a4>, <a7>),
+    edge(<a5>, <a6>),
+    edge(<a7>, <a6>),
+  ), caption: [
+    The Horizontal constraint graph.
+  ]),
+  <6aa>,
+
+  figure(
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: 0.7cm,
+    node((0, 0), align(center)[$1$], name: <a1>, shape: "circle"),
+    node((1, -1), align(center)[$2$], name: <a2>, shape: "circle"),
+    node((1, 1), align(center)[$3$], name: <a3>, shape: "circle"),
+    node((4, 0), align(center)[$4$], name: <a4>, shape: "circle"),
+    node((3, -1), align(center)[$5$], name: <a5>, shape: "circle"),
+    node((2, 0), align(center)[$6$], name: <a6>, shape: "circle"),
+    node((3, 1), align(center)[$7$], name: <a7>, shape: "circle"),
+
+    edge(<a1>, <a2>, "-}>"),
+    edge(<a2>, <a3>, "-}>"),
+    edge(<a3>, <a1>, "-}>"),
+
+    edge(<a6>, <a3>, "-}>"),
+    edge(<a6>, <a5>, "-}>"),
+    edge(<a5>, <a4>, "-}>"),
+    edge(<a4>, <a7>, "-}>"),
+  ),
+  caption: [
+    The Vertical constraint graph.
+  ]),
+  <6ab>,
+
+  columns: (1fr, 1fr),
+  caption: [The constraint graphs for the given channel routing problem.],
+  label: <6afull>,
+)
+
+
+== // 6. (b)
+
+Basic left-edge algorithm is not applicable,
+because it ignores vertical constraints.
+
+Constrained left-edge algorithm is also not applicable,
+because the VCG contains a cycle: $1 -> 2 -> 3 -> 1$.
+
+Therefore, no routing result can be produced by these two algorithms without doglegging.
+
+== // 6. (c)
+
+The cycle in the VCG is $1 -> 2 -> 3 -> 1$. To break the cycle, we can dogleg net 2. Let the new segment of net 2 be $2_a = [1, 2]$ and $2_b = [2, 3]$. After doglegging, the new VCG does not contain any cycle, and the constrained left-edge algorithm can be applied to produce a routing result.
+
+#figure(
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: 0.7cm,
+    node((2, 1), align(center)[$1$], name: <a1>, shape: "circle", radius: 0.5cm),
+    node((0, 1), align(center)[$2_b$], name: <a2>, shape: "circle", radius: 0.5cm),
+    node((1, 1), align(center)[$3$], name: <a3>, shape: "circle", radius: 0.5cm),
+    node((2, 0), align(center)[$4$], name: <a4>, shape: "circle", radius: 0.5cm),
+    node((1, 0), align(center)[$5$], name: <a5>, shape: "circle", radius: 0.5cm),
+    node((0, 0), align(center)[$6$], name: <a6>, shape: "circle", radius: 0.5cm),
+    node((3, 0), align(center)[$7$], name: <a7>, shape: "circle", radius: 0.5cm),
+    node((3, 1), align(center)[$2_a$], name: <b2>, shape: "circle", radius: 0.5cm),
+
+
+    edge(<a1>, <b2>, "-}>"),
+    edge(<a2>, <a3>, "-}>"),
+    edge(<a3>, <a1>, "-}>"),
+
+    edge(<a6>, <a3>, "-}>"),
+    edge(<a6>, <a5>, "-}>"),
+    edge(<a5>, <a4>, "-}>"),
+    edge(<a4>, <a7>, "-}>"),
+  ),
+  caption: [
+    The VCG after doglegging net 2 into $2_a$ and $2_b$.
+  ]
+)
+
+- Now apply the constrained left-edge algorithm. Let $N_x$ denote net $x$.
+
+  - Track 1:
+    - Initially, the unconstrained intervals are $n_2_b$ and $n_6$.
+    - Set `watermark = 0`.
+    - Among the unconstrained intervals with left edge greater than `watermark`,
+      choose the one nearest to `watermark`, which is $n_2_b = [2, 3]$.
+    - Assign $n_2_b$ to track 1 and update `watermark = 3`.
+    - After removing $n_2_b$, interval $n_6 = [6, 9]$ is still unconstrained and has left edge greater than `watermark`.
+    - Assign $n_6$ to track 1 and update `watermark = 9`.
+    - Thus, track 1 contains:
+      $n_2_b, n_6$.
+
+  - Track 2:
+    - After removing $n_2_b$ and $n_6$, the unconstrained intervals are $n_3$ and $n_5$.
+    - Set `watermark = 0`.
+    - Choose $n_3 = [3, 6]$.
+    - Assign $n_3$ to track 2 and update `watermark = 6`.
+    - Then choose $n_5 = [8, 9]$, since its left edge is greater than `watermark`.
+    - Assign $n_5$ to track 2 and update `watermark = 9`.
+    - Thus, track 2 contains:
+      $n_3, n_5$.
+
+  - Track 3:
+    - After removing $n_3$ and $n_5$, the unconstrained intervals are $n_1$ and $n_4$.
+    - Set `watermark = 0`.
+    - Choose $n_1 = [1, 5]$.
+    - Assign $n_1$ to track 3 and update `watermark = 5`.
+    - Interval $n_4 = [4, 8]$ cannot be assigned to the same track because its left edge is not greater than `watermark`.
+    - Thus, track 3 contains:
+      $n_1$.
+  
+  - Track 4:
+    - After removing $n_1$, the unconstrained intervals are $n_2_a$ and $n_4$.
+    - Set `watermark = 0`.
+    - Choose $n_2_a = [1, 2]$.
+    - Assign $n_2_a$ to track 4 and update `watermark = 2`.
+    - Then choose $n_4 = [4, 8]$, since its left edge is greater than `watermark`.
+    - Assign $n_4$ to track 4 and update `watermark = 8`.
+    - Thus, track 4 contains:
+      $n_2_a, n_4$.
+
+  - Track 5:
+    - After removing $n_2_a$ and $n_4$, the only remaining unconstrained interval is $n_7 = [4, 7]$.
+    - Assign $n_7$ to track 5.
+    - Thus, track 5 contains:
+      $n_7$.
+
+- Therefore, the routing result is:
+  $ "Track 1" : n_2_b, n_6 quad "Track 2" : n_3, n_5 quad "Track 3" : n_1 $
+  $ "Track 4" : n_2_a, n_4 quad "Track 5" : n_7 $
+
+- The resulting channel height is 5 tracks.
+
+#figure(
+  image("assets/6c.png", width: 70%),
+  caption: [The routing result after doglegging net 2 and applying the constrained left-edge algorithm. The channel height is 5 tracks.],
+)<6c>
+
 #pagebreak()
 // ---------------------- Problem 7 ----------------------
 = Testing
+
+First, the internal signals are
+$
+y_3 = overline(x_1 x_2), quad
+y_6 = overline(x_2 + x_3),
+$
+and because the fanout branches are functionally identical,
+$
+y_4 = y_5 = y_3, quad y_7 = y_8 = y_6.
+$
+Thus
+$
+z_1 = z_2 = overline(y_3 y_6) = x_2 + x_3.
+$
+
+After fault equivalence, the relevant fault classes and their detecting test sets are:
+
+#table(
+  columns: (1.7fr, 1.2fr),
+  align: (left, center),
+  [Fault class], [Detecting tests],
+  [$y_1$ s-a-1], [$100$],
+  [$y_2$ s-a-0], [$010$],
+  [$x_3$ s-a-0], [$001, 101$],
+  [$x_2$ s-a-0], [$010, 110$],
+  [$x_2$ s-a-1], [$000, 100$],
+  [$y_6$ s-a-1], [$001, 010, 011, 101$],
+  [$z_1$ s-a-0], [$001, 010, 011, 101, 110, 111$],
+)
+
+By dominance, if the detecting test set of fault $f$ is a subset of that of fault $g$,
+then $g$ can be deleted. Therefore,
+$
+{100} subset.eq {000, 100}, quad
+{010} subset.eq {010, 110}, quad
+{001, 101} subset.eq {001, 010, 011, 101}.
+$
+Hence the faults with larger detecting test sets are dominated and can be removed.
+
+Therefore, the prime faults are
+$
+y_1 " s-a-1", quad y_2 " s-a-0", quad x_3 " s-a-0".
+$
+
+Their detecting test sets are
+$
+T(y_1 " s-a-1") = {100}, quad
+T(y_2 " s-a-0") = {010}, quad
+T(x_3 " s-a-0") = {001, 101}.
+$
+
+Thus a complete test set for the prime faults is
+$
+{100, 010, 001}
+$
+or equivalently
+$
+{100, 010, 101}.
+$
