@@ -815,6 +815,7 @@ $
   10 y_A - 38 = 0 quad => quad y_A = 3.8
 $
 Round $(x_A, y_A)$ to the nearest integer grid point, we get the location of $A$ as $(4, 4)$.
+The total wire length is 41.
 
 == // 4. (b)
 The objective function that we want to minimize is the total wire length:
@@ -830,7 +831,7 @@ By using the following python script to enumerate all possible locations of $A$ 
   raw(read("assets/4b.py"), block: true),
 ))
 
-The result shows that the optimal location of $A$ is $(4, 4)$, with cost at 41, which is the same as the result obtained by the force-directed placement method in part (a).
+The result shows that the optimal location of $A$ is $(4, 5)$, however it will overlap with existing point $F$. Therefore, we consider the location $(4, 4)$ with cost at 41, which is the same as the result obtained by the force-directed placement method in part (a).
 
 
 #pagebreak()
